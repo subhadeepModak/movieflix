@@ -31,6 +31,14 @@ const formattedResult = (res: {results: any}, year: any) => {
 
 const DEFAULT_START_PAGE = 2012;
 
+const Loader = () => {
+  return (
+    <View style={styles.indicatorContainer}>
+      <ActivityIndicator size="small" color="white" />
+    </View>
+  );
+};
+
 const MovieList = () => {
   const [filter, dispatch] = useReducer(filterReducer, INITIAL_FILTER_VALUE);
   const [genreList, setGenreList] = useState([]);
@@ -99,7 +107,6 @@ const MovieList = () => {
   );
 
   const handleStartReached = () => {
-    console.log('start');
     if (!onStartReachedInProgress || !onEndReachedInProgress) {
       setOnStartReachedInProgress(true);
       handleLoadMovies('up');
@@ -108,8 +115,6 @@ const MovieList = () => {
   };
 
   const handleEndReached = () => {
-    console.log('end');
-
     if (!onEndReachedInProgress || !onStartReachedInProgress) {
       setOnEndReachedInProgress(true);
       handleLoadMovies('down');
@@ -121,12 +126,12 @@ const MovieList = () => {
 
   useEffect(() => {
     if (genreList.length === 0) loadGenres();
-    if (filter.movieList.length === 0) handleLoadMovies('down');
   }, []);
 
   useEffect(() => {
-    handleLoadMovies('down');
+    if (!filter.movieList.length) handleEndReached();
   }, [filter.with_genres]);
+
   const onGenreSelect = async (id: string) => {
     setStartPage(DEFAULT_START_PAGE);
     setEndPage(DEFAULT_START_PAGE - 1);
@@ -155,20 +160,10 @@ const MovieList = () => {
             onStartReached={handleStartReached}
             onEndReached={handleEndReached}
             showDefaultLoadingIndicators={true}
-            onStartReachedThreshold={10}
-            onEndReachedThreshold={10}
-            activityIndicatorColor={'white'}
-            HeaderLoadingIndicator={() =>
-              onStartReachedInProgress && (
-                <ActivityIndicator size="small" color="white" />
-              )
-            }
-            FooterLoadingIndicator={() =>
-              onEndReachedInProgress && (
-                <ActivityIndicator size="small" color="white" />
-              )
-            }
-            enableAutoscrollToTop={false}
+            onStartReachedThreshold={0.1}
+            onEndReachedThreshold={0.1}
+            FooterLoadingIndicator={() => <Loader />}
+            HeaderLoadingIndicator={() => <Loader />}
             columnWrapperStyle={{gap: 8}}
             numColumns={2}
             contentContainerStyle={{
@@ -179,7 +174,7 @@ const MovieList = () => {
             }}
           />
         ) : (
-          <ActivityIndicator size="small" color="white" />
+          <Loader />
         )}
       </SafeAreaView>
     </View>

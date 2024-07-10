@@ -6,4 +6,11 @@ export default StyleSheet.create({
     height: '100%',
     width: '100%',
   },
+  indicatorContainer: {
+    height: 50,
+    display: 'flex',
+    paddingVertical: 5,
+    width: '100%',
+    alignItems: 'center',
+  },
 });
