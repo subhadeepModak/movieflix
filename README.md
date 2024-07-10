@@ -21,9 +21,9 @@ To start Metro, run the following command from the _root_ of your React Native p
 
 ```bash
 #install dependency
-yarn 
+yarn
 
-```bash
+#start metro
 yarn start
 ```
 
