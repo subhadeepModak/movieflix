@@ -15,7 +15,7 @@ export default StyleSheet.create({
     borderWidth: 0.6,
   },
   active: {
-    backgroundColor: 'grey',
+    backgroundColor: 'red',
   },
   text: {
     color: 'white',
