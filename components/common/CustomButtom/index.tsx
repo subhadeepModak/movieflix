@@ -5,12 +5,17 @@ const CustomButton = ({
   id,
   value,
   onPress,
+  isActive,
 }: {
   id: string;
   value: string;
-  onPress: () => void;
+  onPress: (id: number) => void;
+  isActive: boolean;
 }) => (
-  <TouchableOpacity key={id} onPress={onPress} style={styles.btn}>
+  <TouchableOpacity
+    key={id}
+    onPress={() => onPress(id)}
+    style={{...styles.btn, ...(isActive ? styles.active : {})}}>
     <Text style={styles.text}>{value}</Text>
   </TouchableOpacity>
 );

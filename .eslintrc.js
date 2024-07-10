@@ -1,23 +1,19 @@
-
 module.exports = {
-  'env': {
-    'browser': true,
-    'es2021': true,
-    'node': true
+  env: {
+    browser: true,
+    es2021: true,
+    node: true,
   },
-  'extends': 'eslint:recommended',
-  'parserOptions': {
-    'ecmaVersion': 12,
-    'sourceType': 'module'
+  root: true,
+  extends: '@react-native',
+  parserOptions: {
+    ecmaVersion: 12,
+    sourceType: 'module',
   },
-  'rules': {
-    'quotes': ['error', 'single'],
+  rules: {
     // we want to force semicolons
-    'semi': ['error', 'always'],
-    // we use 2 spaces to indent our code
-    'indent': ['error', 2],
+    semi: ['error', 'always'],
     // we want to avoid extraneous spaces
-    'no-multi-spaces': ['error']
-  }
+    'no-multi-spaces': ['error'],
+  },
 };
-

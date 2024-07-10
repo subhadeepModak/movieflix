@@ -7,7 +7,7 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from 'react-native';
-import {throttle } from 'lodash';
+import {throttle} from 'lodash';
 
 interface Item {
   id: number;
@@ -18,6 +18,7 @@ interface InfiniteScrollListProps {
   fetchData: (page: number) => Promise<Item[]>;
   defaultPage: number;
   renderItem: (item: Item) => any;
+  data: any;
 }
 
 const styles = StyleSheet.create({
@@ -32,9 +33,9 @@ const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
   fetchData,
   defaultPage,
   renderItem,
+  data,
   ...props
 }) => {
-  const [data, setData] = useState<Item[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [startPage, setStartPage] = useState<number>(defaultPage);
   const [endPage, setEndPage] = useState<number>(defaultPage);
@@ -51,45 +52,50 @@ const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
   }, []);
 
   const loadData = async (pageNum: number) => {
-    if(pageNum > 2024 || pageNum < 1950) return;
+    if (pageNum > 2024 || pageNum < 1950) {
+      return null;
+    }
     setLoading(true);
     try {
-      const newData = await fetchData(pageNum);
-      setData(prevData => {
-        if (pageNum < startPage) {
-          setStartPage(pageNum);
-          return [...newData, ...prevData];
-        } else if (pageNum > endPage) {
-          setEndPage(pageNum);
-          return [...prevData, ...newData];
-        } else {
-          return newData;
-        }
-      });
+      await fetchData(pageNum);
+
+      if (pageNum < startPage) {
+        setStartPage(pageNum);
+      }
+      if (pageNum > endPage) {
+        setEndPage(pageNum);
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  const handleLoadNext = async() => {
+  const handleLoadNext = async () => {
     if (!loading && !onEndReachedInProgress) {
       setOnEndReachedInProgress(true);
-     await loadData(endPage + 1).finally(() => setOnEndReachedInProgress(false));
+      await loadData(endPage + 1, 'down').finally(() =>
+        setOnEndReachedInProgress(false),
+      );
     }
   };
 
   const handleLoadPrevious = async () => {
     if (!loading && !onStartReachedInProgress) {
       setOnStartReachedInProgress(true);
-      await loadData(startPage - 1).finally(() => setOnStartReachedInProgress(false));
+      await loadData(startPage - 1, 'up').finally(() =>
+        setOnStartReachedInProgress(false),
+      );
     }
   };
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    if(onStartReachedInProgress || onEndReachedInProgress) return;
-
-    if (!event || !event.nativeEvent || !event.nativeEvent.contentOffset)
+    if (onStartReachedInProgress || onEndReachedInProgress) {
       return;
+    }
+
+    if (!event || !event.nativeEvent || !event.nativeEvent.contentOffset) {
+      return;
+    }
 
     const offset = event.nativeEvent.contentOffset.y;
     const visibleLength = event.nativeEvent.layoutMeasurement.height;
@@ -109,7 +115,7 @@ const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
 
   // Throttled scroll handler to limit the frequency of the scroll events
   const throttledHandleScroll = useCallback(
-  throttle((event: any) => {
+    throttle((event: any) => {
       event.persist();
       handleScroll(event);
     }, 400),
@@ -117,7 +123,9 @@ const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
   );
 
   const renderHeaderLoadingIndicator = () => {
-    if (!onStartReachedInProgress) return null;
+    if (!onStartReachedInProgress) {
+      return null;
+    }
 
     return (
       <View style={styles.indicatorContainer}>
@@ -127,7 +135,9 @@ const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
   };
 
   const renderFooterLoadingIndicator = () => {
-    if (!onEndReachedInProgress) return null;
+    if (!onEndReachedInProgress) {
+      return null;
+    }
 
     return (
       <View style={styles.indicatorContainer}>
@@ -149,7 +159,7 @@ const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
       scrollEventThrottle={true}
       maintainVisibleContentPosition={{
         autoscrollToTopThreshold: 10,
-        minIndexForVisible: 2
+        minIndexForVisible: 2,
       }}
       {...props}
     />
@@ -157,4 +167,3 @@ const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
 };
 
 export default InfiniteScrollList;
-
