@@ -2644,6 +2644,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@stream-io/flat-list-mvcp@npm:^0.10.3":
+  version: 0.10.3
+  resolution: "@stream-io/flat-list-mvcp@npm:0.10.3"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 6c839e060b1c0291f87101f39308cb8a53f34e200e41316255c2b3e2f1db0239b98e7c5f17e5882f3374222b29cf5015d0e8855069068ae818b01c64faf04742
+  languageName: node
+  linkType: hard
+
 "@types/babel__core@npm:^7.1.14":
   version: 7.20.5
   resolution: "@types/babel__core@npm:7.20.5"
@@ -3018,6 +3028,7 @@ __metadata:
     "@react-native/eslint-config": 0.74.84
     "@react-native/metro-config": 0.74.84
     "@react-native/typescript-config": 0.74.84
+    "@stream-io/flat-list-mvcp": ^0.10.3
     "@types/react": ^18.2.6
     "@types/react-test-renderer": ^18.0.0
     babel-jest: ^29.6.3
@@ -3028,6 +3039,7 @@ __metadata:
     query-string: ^9.0.0
     react: 18.2.0
     react-native: 0.74.2
+    react-native-bidirectional-infinite-scroll: ^0.3.3
     react-native-linear-gradient: ^2.8.3
     react-native-skeleton-placeholder: ^5.2.4
     react-test-renderer: 18.2.0
@@ -7989,6 +8001,17 @@ __metadata:
   version: 17.0.2
   resolution: "react-is@npm:17.0.2"
   checksum: 9d6d111d8990dc98bc5402c1266a808b0459b5d54830bbea24c12d908b536df7883f268a7868cfaedde3dd9d4e0d574db456f84d2e6df9c4526f99bb4b5344d8
+  languageName: node
+  linkType: hard
+
+"react-native-bidirectional-infinite-scroll@npm:^0.3.3":
+  version: 0.3.3
+  resolution: "react-native-bidirectional-infinite-scroll@npm:0.3.3"
+  peerDependencies:
+    "@stream-io/flat-list-mvcp": ">=0.10.0"
+    react: "*"
+    react-native: "*"
+  checksum: fdcaabe660d3a7c566933ff428c20c41ca65d0994752804f1d4f25a3c68b99e8f356a1681fe3f417cc772a321ce919142b9d705ae77f14380b1e057b1a4db1f7
   languageName: node
   linkType: hard
 
