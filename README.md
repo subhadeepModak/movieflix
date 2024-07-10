@@ -1,5 +1,8 @@
 ## MovieFlix React Native App
 
+![screenShoot](https://github.com/subhadeepModak/movieflix/assets/50794400/a74ba4ac-3dc4-4ab8-83e6-6f163441f62c)
+
+
 ## Prerequisites
 
 - [Node.js > 18](https://nodejs.org) and npm (Recommended: Use [nvm](https://github.com/nvm-sh/nvm))
