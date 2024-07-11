@@ -1170,6 +1170,8 @@ PODS:
     - React-utils (= 0.74.2)
   - RNCMaskedView (0.3.1):
     - React-Core
+  - RNSVG (15.3.0):
+    - React-Core
   - SocketRocket (0.7.0)
   - Yoga (0.0.0)
 
@@ -1232,6 +1234,7 @@ DEPENDENCIES:
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
+  - RNSVG (from `../node_modules/react-native-svg`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -1352,6 +1355,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNCMaskedView:
     :path: "../node_modules/@react-native-masked-view/masked-view"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -1412,6 +1417,7 @@ SPEC CHECKSUMS:
   React-utils: 4476b7fcbbd95cfd002f3e778616155241d86e31
   ReactCommon: ecad995f26e0d1e24061f60f4e5d74782f003f12
   RNCMaskedView: 090213d32d8b3bb83a4dcb7d12c18f0152591906
+  RNSVG: a48668fd382115bc89761ce291a81c4ca5f2fd2e
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Yoga: 2f71ecf38d934aecb366e686278102a51679c308
 
