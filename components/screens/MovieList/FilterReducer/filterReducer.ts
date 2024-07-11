@@ -2,6 +2,7 @@ export const INITIAL_FILTER_VALUE = {
   with_genres: [],
   isFilterChanging: false,
   movieList: [],
+  searchText: '',
 };
 
 export const filterReducer = (
@@ -28,6 +29,13 @@ export const filterReducer = (
       return {
         ...state,
         movieList: payload,
+      };
+    }
+    case 'SEARCH_INPUT_CHANGE': {
+      return {
+        ...state,
+        movieList: [],
+        searchText: payload,
       };
     }
 

@@ -18,18 +18,7 @@ import {
 } from './FilterReducer/filterReducer';
 import {FlatList} from 'react-native-bidirectional-infinite-scroll';
 import {debounce} from 'lodash';
-
-const formattedResult = (res: {results: any}, year: any) => {
-  if (res.results.length)
-    return [
-      {id: year, value: year, type: 'label'},
-      {id: `${year}_blank`, value: '', type: 'label'},
-      ...res.results,
-    ];
-  else return [];
-};
-
-const DEFAULT_START_PAGE = 2012;
+import {DEFAULT_START_PAGE, formattedResult} from './helpers';
 
 const Loader = () => {
   return (
@@ -62,9 +51,24 @@ const MovieList = () => {
     }
   };
 
+  const handleOnChange = (text: string) => {
+    setStartPage(DEFAULT_START_PAGE);
+    setEndPage(DEFAULT_START_PAGE - 1);
+    setTimeout(
+      () =>
+        dispatch({
+          type: 'SEARCH_INPUT_CHANGE',
+          payload: text,
+        }),
+      500,
+    );
+  };
+
   const handleLoadMovies = useCallback(
     debounce(async (direction: string) => {
-      if (loading) return;
+      if (loading) {
+        return;
+      }
       setLoading(true);
 
       try {
@@ -75,12 +79,11 @@ const MovieList = () => {
           primary_release_year: page,
           'vote_count.gte': 100,
           with_genres: filter.with_genres.join(','),
+          with_keywords: filter.searchText,
         });
 
         const data = await response.json();
         const newItems = formattedResult(data, page);
-
-        console.log(page, newItems.length, direction);
 
         if (direction === 'up') {
           setStartPage(page);
@@ -111,10 +114,12 @@ const MovieList = () => {
       setOnStartReachedInProgress(true);
       handleLoadMovies('up');
       return Promise.resolve(true);
-    } else Promise.resolve(true);
+    } else {
+      Promise.resolve(true);
+    }
   };
 
-  const handleEndReached = () => {
+  const handleEndReached = useCallback(() => {
     if (!onEndReachedInProgress || !onStartReachedInProgress) {
       setOnEndReachedInProgress(true);
       handleLoadMovies('down');
@@ -122,15 +127,24 @@ const MovieList = () => {
     } else {
       return Promise.resolve(true);
     }
-  };
+  }, [onEndReachedInProgress, onStartReachedInProgress, handleLoadMovies]);
 
   useEffect(() => {
-    if (genreList.length === 0) loadGenres();
+    if (genreList.length === 0) {
+      loadGenres();
+    }
   }, []);
 
   useEffect(() => {
-    if (!filter.movieList.length) handleEndReached();
-  }, [filter.with_genres]);
+    if (!filter.movieList.length) {
+      handleEndReached();
+    }
+  }, [
+    filter.movieList.length,
+    filter.with_genres,
+    handleEndReached,
+    filter.searchText,
+  ]);
 
   const onGenreSelect = async (id: string) => {
     setStartPage(DEFAULT_START_PAGE);
@@ -144,7 +158,10 @@ const MovieList = () => {
 
   return (
     <View style={styles.container}>
-      <AppHeader />
+      <AppHeader
+        handleOnChange={handleOnChange}
+        filterValue={filter.searchText}
+      />
       <Genre
         genres={genreList}
         onSelect={onGenreSelect}
