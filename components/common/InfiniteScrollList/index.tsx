@@ -1,12 +1,12 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react';
 import {
-  FlatList,
   ActivityIndicator,
   View,
   StyleSheet,
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from 'react-native';
+import {FlatList} from '@stream-io/flat-list-mvcp';
 import {throttle} from 'lodash';
 
 interface Item {
@@ -159,7 +159,7 @@ const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
       scrollEventThrottle={true}
       maintainVisibleContentPosition={{
         autoscrollToTopThreshold: 10,
-        minIndexForVisible: 2,
+        minIndexForVisible: 1,
       }}
       {...props}
     />
