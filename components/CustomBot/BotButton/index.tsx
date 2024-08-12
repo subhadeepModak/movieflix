@@ -2,12 +2,11 @@ import React, {useCallback, useReducer, useRef, useState} from 'react';
 import {
   FlatList,
   Pressable,
-  StyleSheet,
   TextInput,
   View,
   TouchableOpacity,
   Text,
-  Image
+  Image,
 } from 'react-native';
 import {botReducer, initialState} from '../Reducer/reducer';
 import ChatView from '../ChatView';
@@ -15,13 +14,11 @@ import EmptyScreen from '../BotScreen/EmptyScreen';
 import CustomBottomSheet from '../../CustomBottomSheet/CustomBottomSheet';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import styles from './styles';
 
 type BottomSheetComponentProps = {};
 
-const BotButton: React.FunctionComponent<BottomSheetComponentProps> = ({
-  extraParams,
-  apiUrl,
-}) => {
+const BotButton: React.FunctionComponent<BottomSheetComponentProps> = ({}) => {
   const ref = useRef(null);
   const [chatData, chatDispatch] = useReducer(botReducer, initialState);
   const [inputValue, setInputValue] = useState('');
@@ -89,83 +86,5 @@ const BotButton: React.FunctionComponent<BottomSheetComponentProps> = ({
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  input: {
-    width: '85%',
-    borderColor: 'red',
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-  },
-  btnText: {fontSize: 16, color: 'white', fontWeight: 'bold'},
-  chatContainer: {
-    marginTop: 10,
-    padding: 10,
-    height: '100%',
-    width: '100%',
-  },
-  button: {
-    position: 'absolute',
-    bottom: 40,
-    right: 10,
-    borderRadius: 50,
-    height: 50,
-    width: 50,
-    backgroundColor: 'white',
-    borderColor: 'red',
-    borderWidth: 1,
-    color: 'white',
-    shadowColor: 'black',
-    overflow: 'hidden',
-  },
-  submit: {
-    height: 30,
-    width: 30,
-    borderRadius: 50,
-    borderColor: 'red',
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 10,
-    backgroundColor: 'red',
-  },
-  inputContainer: {
-    borderTopColor: 'black',
-    borderTopWidth: 0.5,
-    flex: 1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
-    padding: 15,
-    position: 'absolute',
-    bottom: 100,
-    width: '100%',
-  },
-  fab: {
-    height: 8,
-    width: 60,
-    backgroundColor: 'black',
-    borderRadius: 10,
-    position: 'absolute',
-    top: 5,
-    left: '42%',
-    padding: 5,
-  },
-  container: {
-    position: 'relative',
-    backgroundColor: 'white',
-    borderTopEndRadius: 25,
-    borderTopStartRadius: 25,
-    width: '100%',
-    flex: 1,
-  },
-  animeBtn: {
-    height: 50,
-    width: 50,
-    borderRadius: 50,
-  },
-});
 
 export default BotButton;

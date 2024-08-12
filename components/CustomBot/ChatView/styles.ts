@@ -1,27 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-
-export const ChatView = ({item}) => {
-  const {role, content} = item;
-
-  return (
-    <View style={styles.container}>
-      {role === 'user' ? (
-        <View style={styles.question}>
-          <Text style={styles.user}>{'You'}</Text>
-          <Text style={styles.text}>{content}</Text>
-        </View>
-      ) : (
-        <View style={styles.response}>
-          <Text style={styles.user}>{'Assistant'}</Text>
-          <Text style={styles.text}>{content}</Text>
-        </View>
-      )}
-    </View>
-  );
-};
-
-export default ChatView;
+import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   user: {
@@ -62,3 +39,5 @@ const styles = StyleSheet.create({
     padding: 5,
   },
 });
+
+export default styles;

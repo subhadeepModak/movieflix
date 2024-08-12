@@ -6,7 +6,7 @@ export const initialState = {
   ],
 };
 
-export const botReducer = (state = initialState, action) => {
+export const botReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case 'UPDATE_CONVERSATION':
       return {
