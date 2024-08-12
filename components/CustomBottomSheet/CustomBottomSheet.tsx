@@ -28,9 +28,7 @@ const CustomBottomSheet = React.forwardRef<
 >(({children}, ref) => {
   const translateY = useSharedValue(0);
   const active = useSharedValue(false);
-  const sheetRef = useRef();
-
-  console.log(sheetRef?.current);
+  const sheetRef = useRef(null);
 
   const scrollTo = useCallback((destination: number) => {
     'worklet';
@@ -56,7 +54,7 @@ const CustomBottomSheet = React.forwardRef<
     })
     .onEnd(() => {
       if (translateY.value > -SCREEN_HEIGHT / 3) {
-        scrollTo(0);
+        scrollTo(50);
       } else if (translateY.value < -SCREEN_HEIGHT / 1.5) {
         scrollTo(MAX_TRANSLATE_Y);
       }
@@ -78,7 +76,9 @@ const CustomBottomSheet = React.forwardRef<
 
   return (
     <GestureDetector gesture={gesture}>
-      <Animated.View style={[styles.bottomSheetContainer, rBottomSheetStyle]} ref={sheetRef}>
+      <Animated.View
+        style={[styles.bottomSheetContainer, rBottomSheetStyle]}
+        ref={sheetRef}>
         {children}
       </Animated.View>
     </GestureDetector>

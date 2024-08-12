@@ -18,27 +18,59 @@ import styles from './styles';
 
 type BottomSheetComponentProps = {};
 
-const BotButton: React.FunctionComponent<BottomSheetComponentProps> = ({}) => {
+const BotButton: React.FunctionComponent<BottomSheetComponentProps> = ({
+  apiUrl,
+  extraParams,
+}: {
+  apiUrl: String;
+  extraParams: Object;
+}) => {
   const ref = useRef(null);
   const [chatData, chatDispatch] = useReducer(botReducer, initialState);
   const [inputValue, setInputValue] = useState('');
 
-  const onPressAsk = () => {
+  const fetchResponse = async () => {
+    chatDispatch({
+      type: 'RESPONSE_LOADING',
+      payload: true,
+    });
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      body: {
+        ...extraParams,
+        history: JSON.stringify(chatData.qna),
+        content: inputValue,
+      },
+    });
+
+    console.log(response);
+
+    if (response.status === 200) {
+      console.log(response);
+      chatDispatch({
+        type: 'UPDATE_CONVERSATION',
+        payload: {role: 'assistant', content: response},
+      });
+    }
+
+    chatDispatch({
+      type: 'RESPONSE_LOADING',
+      payload: false,
+    });
+  };
+
+  const onPressAsk = async () => {
     chatDispatch({
       type: 'UPDATE_CONVERSATION',
       payload: {role: 'user', content: inputValue},
     });
+
+    await fetchResponse();
+
     setInputValue('');
   };
 
-  const onPress = useCallback(() => {
-    const isActive = ref?.current?.isActive();
-    if (isActive) {
-      ref?.current?.scrollTo(0);
-    } else {
-      ref?.current?.scrollTo(-200);
-    }
-  }, [ref?.current]);
+  const onPress = useCallback(() => ref?.current?.scrollTo(-200));
 
   return (
     <>
