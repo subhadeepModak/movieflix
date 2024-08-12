@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import {ActivityIndicator, SafeAreaView, View} from 'react-native';
+import {ActivityIndicator, SafeAreaView, Text, View} from 'react-native';
 import React, {
   useEffect,
   useReducer,
@@ -158,10 +158,10 @@ const MovieList = () => {
 
   return (
     <View style={styles.container}>
-      <AppHeader
+      {/* <AppHeader
         handleOnChange={handleOnChange}
         filterValue={filter.searchText}
-      />
+      /> */}
       <Genre
         genres={genreList}
         onSelect={onGenreSelect}

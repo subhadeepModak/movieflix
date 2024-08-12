@@ -4,10 +4,13 @@ import {SafeAreaView} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import MovieList from './components/screens/MovieList';
 import SplashScreen from 'react-native-splash-screen';
+import {BotButton} from './components/CustomBot';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 function App(): React.JSX.Element {
   const backgroundStyle = {
     backgroundColor: Colors.darker,
+    position: 'relative',
   };
 
   useEffect(() => {
@@ -15,9 +18,12 @@ function App(): React.JSX.Element {
   }, []);
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <MovieList />
-    </SafeAreaView>
+    <SafeAreaProvider>
+      <SafeAreaView style={backgroundStyle}>
+        <MovieList />
+        <BotButton />
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
