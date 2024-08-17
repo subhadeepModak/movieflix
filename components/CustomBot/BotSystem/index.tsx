@@ -98,56 +98,52 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
         <Image source={require('../Mahindra.png')} style={styles.animeBtn} />
       </TouchableOpacity>
 
-      <GestureHandlerRootView>
-        <CustomBottomSheet ref={ref} fixed>
-          <SafeAreaView style={styles.container}>
-            <Pressable style={styles.fab} onPress={() => onPress()} />
+      <CustomBottomSheet ref={ref} fixed>
+        <SafeAreaView style={styles.container}>
+          <Pressable style={styles.fab} onPress={() => onPress()} />
 
-            <View style={styles.chatContainer}>
-              {chatData.qna.length ? (
-                <FlatList
-                  data={data}
-                  keyExtractor={(item, index) =>
-                    item.content + index.toString()
-                  }
-                  renderItem={({item}) => (
-                    <ChatView item={item} key={item.content} />
-                  )}
-                  ListFooterComponent={
-                    chatData.isLoading ? (
-                      <ChatView
-                        item={{role: 'assistant', content: 'Loading...'}}
-                        key={'loader'}
-                        isLoading={chatData.isLoading}
-                      />
-                    ) : (
-                      <View style={styles.emptyBottomSpace} />
-                    )
-                  }
-                  style={styles.listStyle}
-                />
-              ) : (
-                <EmptyScreen />
-              )}
-            </View>
-            <View style={styles.inputContainer}>
-              <TextInput
-                placeholder="Ask me ..."
-                style={styles.input}
-                onChangeText={setInputValue}
-                value={inputValue}
-                editable={!chatData.isLoading}
+          <View style={styles.chatContainer}>
+            {chatData.qna.length ? (
+              <FlatList
+                data={data}
+                keyExtractor={(item, index) => item.content + index.toString()}
+                renderItem={({item}) => (
+                  <ChatView item={item} key={item.content} />
+                )}
+                ListFooterComponent={
+                  chatData.isLoading ? (
+                    <ChatView
+                      item={{role: 'assistant', content: 'Loading...'}}
+                      key={'loader'}
+                      isLoading={chatData.isLoading}
+                    />
+                  ) : (
+                    <View style={styles.emptyBottomSpace} />
+                  )
+                }
+                style={styles.listStyle}
               />
-              <TouchableOpacity
-                style={styles.submit}
-                onPress={onPressAsk}
-                disabled={!inputValue}>
-                <Text style={styles.btnText}>{'>'}</Text>
-              </TouchableOpacity>
-            </View>
-          </SafeAreaView>
-        </CustomBottomSheet>
-      </GestureHandlerRootView>
+            ) : (
+              <EmptyScreen />
+            )}
+          </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Ask me ..."
+              style={styles.input}
+              onChangeText={setInputValue}
+              value={inputValue}
+              editable={!chatData.isLoading}
+            />
+            <TouchableOpacity
+              style={styles.submit}
+              onPress={onPressAsk}
+              disabled={!inputValue || chatData.isLoading}>
+              <Text style={styles.btnText}>{'>'}</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </CustomBottomSheet>
     </>
   );
 };

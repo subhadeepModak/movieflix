@@ -10,7 +10,7 @@ export const ChatView = ({item, isLoading}: any) => {
     return (
       <View style={styles.container}>
         <View style={styles.loadingWrapper}>
-          <LoadingDots />
+          <LoadingDots size={10} />
         </View>
       </View>
     );

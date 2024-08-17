@@ -1,6 +1,10 @@
 import {Dimensions, StyleSheet} from 'react-native';
 import React, {useCallback, useImperativeHandle, useRef} from 'react';
-import {Gesture, GestureDetector} from 'react-native-gesture-handler';
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from 'react-native-gesture-handler';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -76,13 +80,15 @@ const CustomBottomSheet = React.forwardRef<
   });
 
   return (
-    <GestureDetector gesture={gesture}>
-      <Animated.View
-        style={[styles.bottomSheetContainer, rBottomSheetStyle]}
-        ref={sheetRef}>
-        {children}
-      </Animated.View>
-    </GestureDetector>
+    <GestureHandlerRootView>
+      <GestureDetector gesture={gesture}>
+        <Animated.View
+          style={[styles.bottomSheetContainer, rBottomSheetStyle]}
+          ref={sheetRef}>
+          {children}
+        </Animated.View>
+      </GestureDetector>
+    </GestureHandlerRootView>
   );
 });
 
