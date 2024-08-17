@@ -1,4 +1,9 @@
-import {Dimensions, StyleSheet} from 'react-native';
+import {
+  Dimensions,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import React, {useCallback, useImperativeHandle, useRef} from 'react';
 import {
   Gesture,
@@ -14,7 +19,6 @@ import Animated, {
 } from 'react-native-reanimated';
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
-
 const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 100;
 
 type BottomSheetProps = {
@@ -31,7 +35,7 @@ const CustomBottomSheet = React.forwardRef<
   BottomSheetRefProps,
   BottomSheetProps
 >(({children}, ref) => {
-  const translateY = useSharedValue(0);
+  const translateY = useSharedValue(50);
   const active = useSharedValue(false);
   const sheetRef = useRef(null);
 
@@ -39,7 +43,7 @@ const CustomBottomSheet = React.forwardRef<
     'worklet';
     active.value = destination !== 0;
 
-    translateY.value = withSpring(destination, {damping: 50});
+    translateY.value = withSpring(destination, {damping: 100});
   }, []);
 
   const isActive = useCallback(() => {
@@ -49,6 +53,7 @@ const CustomBottomSheet = React.forwardRef<
   useImperativeHandle(ref, () => ({scrollTo, isActive}), [scrollTo, isActive]);
 
   const context = useSharedValue({y: 0});
+
   const gesture = Gesture.Pan()
     .onStart(() => {
       context.value = {y: translateY.value};
@@ -58,8 +63,8 @@ const CustomBottomSheet = React.forwardRef<
       translateY.value = Math.max(translateY.value, MAX_TRANSLATE_Y);
     })
     .onEnd(() => {
-      if (translateY.value > -SCREEN_HEIGHT / 3) {
-        scrollTo(50);
+      if (translateY.value > -SCREEN_HEIGHT / 2) {
+        scrollTo(100);
       } else if (translateY.value < -SCREEN_HEIGHT / 1.5) {
         scrollTo(MAX_TRANSLATE_Y);
       }
@@ -85,7 +90,11 @@ const CustomBottomSheet = React.forwardRef<
         <Animated.View
           style={[styles.bottomSheetContainer, rBottomSheetStyle]}
           ref={sheetRef}>
-          {children}
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.keyboardAvoidingView}>
+            {children}
+          </KeyboardAvoidingView>
         </Animated.View>
       </GestureDetector>
     </GestureHandlerRootView>
@@ -99,6 +108,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     position: 'absolute',
     borderRadius: 25,
+  },
+  keyboardAvoidingView: {
+    flex: 1,
   },
 });
 

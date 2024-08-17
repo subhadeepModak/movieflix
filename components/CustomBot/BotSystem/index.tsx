@@ -12,7 +12,7 @@ import {botReducer, initialState} from '../Reducer/reducer';
 import ChatView from '../ChatView';
 import EmptyScreen from '../BotScreen/EmptyScreen';
 import CustomBottomSheet from '../CustomBottomSheet/CustomBottomSheet';
-import {GestureHandlerRootView, FlatList} from 'react-native-gesture-handler';
+import {FlatList} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import styles from './styles';
 import {HEADERS} from '../constant';
@@ -97,7 +97,6 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
       <TouchableOpacity style={styles.button} onPress={onPress}>
         <Image source={require('../Mahindra.png')} style={styles.animeBtn} />
       </TouchableOpacity>
-
       <CustomBottomSheet ref={ref} fixed>
         <SafeAreaView style={styles.container}>
           <Pressable style={styles.fab} onPress={() => onPress()} />
