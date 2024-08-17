@@ -47,7 +47,9 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
       method: 'POST',
       body: JSON.stringify({
         ...extraParams,
-        history: JSON.stringify(chatData.qna),
+        history: JSON.stringify(
+          chatData.qna.slice(Math.max(chatData.qna.length - 3, 0)),
+        ),
         query: inputValue,
       }),
       headers: HEADERS,
@@ -119,12 +121,10 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
                         isLoading={chatData.isLoading}
                       />
                     ) : (
-                      <View style={{width: '100%', height: 50}} />
+                      <View style={styles.emptyBottomSpace} />
                     )
                   }
-                  style={{
-                    padding: 10,
-                  }}
+                  style={styles.listStyle}
                 />
               ) : (
                 <EmptyScreen />

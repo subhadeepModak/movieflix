@@ -78,6 +78,10 @@ const styles = StyleSheet.create({
     width: 30,
     borderRadius: 50,
   },
+  listStyle: {
+    padding: 10,
+  },
+  emptyBottomSpace: {width: '100%', height: 50},
 });
 
 export default styles;
