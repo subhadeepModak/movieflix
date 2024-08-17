@@ -4,7 +4,7 @@ import {SafeAreaView} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import MovieList from './components/screens/MovieList';
 import SplashScreen from 'react-native-splash-screen';
-import {BotButton} from './components/CustomBot';
+import {API_URL, BotSystem} from './components/CustomBot';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 function App(): React.JSX.Element {
@@ -21,7 +21,10 @@ function App(): React.JSX.Element {
     <SafeAreaProvider>
       <SafeAreaView style={backgroundStyle}>
         <MovieList />
-        <BotButton />
+        <BotSystem
+          apiUrl={API_URL}
+          extraParams={{session_id: 'NS', dealer_code: 14052}}
+        />
       </SafeAreaView>
     </SafeAreaProvider>
   );

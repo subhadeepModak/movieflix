@@ -112,7 +112,7 @@ const MovieList = () => {
   const handleStartReached = () => {
     if (!onStartReachedInProgress || !onEndReachedInProgress) {
       setOnStartReachedInProgress(true);
-      handleLoadMovies('up');
+      // handleLoadMovies('up');
       return Promise.resolve(true);
     } else {
       Promise.resolve(true);
@@ -131,13 +131,13 @@ const MovieList = () => {
 
   useEffect(() => {
     if (genreList.length === 0) {
-      loadGenres();
+      // loadGenres();
     }
   }, []);
 
   useEffect(() => {
     if (!filter.movieList.length) {
-      handleEndReached();
+      // handleEndReached();
     }
   }, [
     filter.movieList.length,

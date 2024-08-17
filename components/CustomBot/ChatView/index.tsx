@@ -1,10 +1,20 @@
 import {Text, View} from 'react-native';
 import React from 'react';
+import LoadingDots from 'react-native-loading-dots';
 import styles from './styles';
 
-export const ChatView = ({item}: any) => {
+export const ChatView = ({item, isLoading}: any) => {
   const {role, content} = item;
 
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.loadingWrapper}>
+          <LoadingDots />
+        </View>
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       {role === 'user' ? (

@@ -1,12 +1,20 @@
 // suggested data structure
 export const initialState = {
-  qna: [
-    // {role: 'user', content: 'What is the count of total order in 2023?'},
-    // {role: 'assistant', content: 'Total order count in 2023 is 646'},
-  ],
+  qna: [],
+  isLoading: false,
 };
+interface State {
+  qna: any;
+  isLoading: boolean;
+}
 
-export const botReducer = (state = initialState, action: any) => {
+// Define the action types
+type Action =
+  | {type: 'UPDATE_CONVERSATION'; payload: {role: String; content: String}}
+  | {type: 'RESET_CONVERSATION'}
+  | {type: 'RESPONSE_LOADING'; payload: boolean};
+
+export const botReducer = (state: State, action: Action) => {
   switch (action.type) {
     case 'UPDATE_CONVERSATION':
       return {
@@ -17,6 +25,11 @@ export const botReducer = (state = initialState, action: any) => {
       return {
         ...state,
         qna: [],
+      };
+    case 'RESPONSE_LOADING':
+      return {
+        ...state,
+        isLoading: action.payload,
       };
     default:
       return state;

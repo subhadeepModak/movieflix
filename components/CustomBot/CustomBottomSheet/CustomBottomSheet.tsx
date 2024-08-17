@@ -15,6 +15,7 @@ const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 100;
 
 type BottomSheetProps = {
   children?: React.ReactNode;
+  fixed?: boolean;
 };
 
 export type BottomSheetRefProps = {
