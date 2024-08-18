@@ -6,6 +6,8 @@ import MovieList from './components/screens/MovieList';
 import SplashScreen from 'react-native-splash-screen';
 import {API_URL, BotSystem} from './components/CustomBot';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 function App(): React.JSX.Element {
   const backgroundStyle = {
@@ -18,15 +20,19 @@ function App(): React.JSX.Element {
   }, []);
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={backgroundStyle}>
-        <MovieList />
-        <BotSystem
-          apiUrl={API_URL}
-          extraParams={{session_id: 'NS', dealer_code: 14052}}
-        />
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <BottomSheetModalProvider>
+        <SafeAreaProvider>
+          <SafeAreaView style={backgroundStyle}>
+            <MovieList />
+            <BotSystem
+              apiUrl={API_URL}
+              extraParams={{session_id: 'NS', dealer_code: 14052}}
+            />
+          </SafeAreaView>
+        </SafeAreaProvider>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
   );
 }
 

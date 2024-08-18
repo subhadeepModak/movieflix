@@ -12,7 +12,6 @@ const styles = StyleSheet.create({
   btnText: {fontSize: 16, color: 'white', fontWeight: 'bold'},
   chatContainer: {
     width: '100%',
-    flex: 1,
     marginBottom: 80,
     borderTopColor: '#dadada',
     borderTopWidth: 1,
@@ -44,15 +43,16 @@ const styles = StyleSheet.create({
     marginRight: 10,
     backgroundColor: 'red',
   },
+  sheetStyle: {borderRadius: 30, backgroundColor: '#fff'},
   inputContainer: {
     borderTopColor: '#dadada',
+    backgroundColor: '#fff',
     borderTopWidth: 1,
     justifyContent: 'space-between',
-    alignItems: 'flex-end',
+    alignItems: 'center',
     flexDirection: 'row',
-    padding: 15,
-    bottom: 80,
-    height: 80,
+    padding: 10,
+    height: 60,
     width: '100%',
   },
   fab: {
