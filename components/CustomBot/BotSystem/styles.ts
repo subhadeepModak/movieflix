@@ -12,8 +12,9 @@ const styles = StyleSheet.create({
   btnText: {fontSize: 16, color: 'white', fontWeight: 'bold'},
   chatContainer: {
     width: '100%',
-    marginBottom: 80,
+    height: '100%',
     borderTopColor: '#dadada',
+    backgroundColor: '#dedede',
     borderTopWidth: 1,
   },
   button: {
@@ -68,9 +69,8 @@ const styles = StyleSheet.create({
   container: {
     position: 'relative',
     backgroundColor: 'white',
-    borderTopEndRadius: 25,
-    borderTopStartRadius: 25,
     width: '100%',
+    height: '100%',
     flex: 1,
   },
   animeBtn: {
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   listStyle: {
     padding: 10,
   },
-  emptyBottomSpace: {width: '100%', height: 50},
+  emptyBottomSpace: {width: '100%', height: 90, paddingBottom: 50},
 });
 
 export default styles;

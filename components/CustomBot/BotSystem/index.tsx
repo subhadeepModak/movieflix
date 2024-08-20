@@ -19,7 +19,9 @@ import EmptyScreen from '../BotScreen/EmptyScreen';
 import CustomBottomSheet from '../BottomSheet';
 import {FlatList} from 'react-native-gesture-handler';
 import styles from './styles';
-import {HEADERS} from '../constant';
+import {HEADERS, SUGGESTIONS} from '../constant';
+import {BottomSheetDefaultFooterProps} from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetFooter/types';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 type BottomSheetComponentProps = {
   apiUrl: string;
@@ -34,8 +36,10 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
   extraParams: Object;
 }) => {
   const inputRef = useRef(null);
+  const flatListRef = useRef(null);
   const inputTextRef = useRef('');
   const sheetRef = useRef();
+  const inset = useSafeAreaInsets();
   const {dismissAll} = useBottomSheetModal();
   const [chatData, chatDispatch] = useReducer(botReducer, initialState);
   const Input = Platform.OS === 'ios' ? BottomSheetTextInput : TextInput;
@@ -55,19 +59,35 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
       method: 'POST',
       body: JSON.stringify({
         ...extraParams,
-        history: JSON.stringify(
-          chatData.qna.slice(Math.max(chatData.qna.length - 3, 0)),
-        ),
+        // history: JSON.stringify(
+        //   // chatData.qna.slice(Math.max(chatData.qna.length - 3, 4)),
+        //   [],
+        // ),
+        history: JSON.stringify([]),
         query: inputVal,
       }),
       headers: HEADERS,
     })
-      .then(response => response.json())
-      .then(data => {
-        if (data.response) {
+      .then(async response => {
+        const contentType = response.headers.get('content-type');
+        if (contentType === 'image/png') {
+          const blob = await response.blob();
+          const imageObjectURL = URL.createObjectURL(blob);
+          return {response: {src: imageObjectURL}};
+        }
+        return response.json();
+      })
+      .then((data: {response: any}) => {
+        if (data?.response) {
           chatDispatch({
             type: 'UPDATE_CONVERSATION',
             payload: {role: 'assistant', content: data.response},
+          });
+        }
+        if (Array.isArray(data)) {
+          chatDispatch({
+            type: 'UPDATE_CONVERSATION',
+            payload: {role: 'assistant', content: data},
           });
         }
       })
@@ -101,7 +121,7 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
   }, []);
 
   const renderFooter = useCallback(
-    props => (
+    (props: React.JSX.IntrinsicAttributes & BottomSheetDefaultFooterProps) => (
       <BottomSheetFooter
         {...props}
         bottomInset={'0'}
@@ -115,33 +135,74 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
         <Input
           ref={inputRef}
           placeholder="Ask me ..."
-          style={styles.input}
-          onChangeText={text => {
+          style={[
+            styles.input,
+            ...(chatData.inputDisabled
+              ? [
+                  {
+                    backgroundColor: '#757472',
+                    borderColor: '#dedede',
+                  },
+                ]
+              : []),
+          ]}
+          onChangeText={(text: any) => {
             inputTextRef.current = text;
           }}
           defaultValue={inputTextRef.current}
-          editable={!chatData.isLoading}
+          editable={!chatData.inputDisabled}
         />
         <TouchableOpacity
           style={styles.submit}
           onPress={onPressAsk}
-          disabled={chatData.isLoading}>
+          disabled={chatData.isLoading || chatData.inputDisabled}>
           <Text style={styles.btnText}>{'>'}</Text>
         </TouchableOpacity>
       </BottomSheetFooter>
     ),
-    [inputTextRef?.current],
+    [inputTextRef?.current, chatData.inputDisabled],
   );
 
-  const sheetSnapIndexChangeHandler = currIndex => {
+  const sheetSnapIndexChangeHandler = (currIndex: number) => {
     if (currIndex === -1) {
       sheetRef?.current?.close();
       dismissAll();
     }
   };
 
+  const onPressHandler = async (item: string | number) => {
+    chatDispatch({
+      type: 'UPDATE_CONVERSATION',
+      payload: {role: 'user', content: item},
+    });
+    if (SUGGESTIONS[item]) {
+      await chatDispatch({
+        type: 'UPDATE_CONVERSATION',
+        payload: {role: 'Assistant', ...SUGGESTIONS[item]},
+      });
+    } else {
+      chatDispatch({
+        type: 'UPDATE_CONVERSATION',
+        payload: {
+          role: 'Assistant',
+          content: `Now you can ask questions regarding ${item}.`,
+        },
+      });
+      chatDispatch({
+        type: 'UPDATE_INPUT_ENABLED_STATUS',
+        payload: false,
+      });
+    }
+  };
+
   const renderItem = useCallback(({item}: any) => {
-    return <ChatView item={item} key={item.content} />;
+    return (
+      <ChatView
+        item={item}
+        key={item.content}
+        onPressHandler={onPressHandler}
+      />
+    );
   }, []);
 
   return (
@@ -150,6 +211,8 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
         <Image source={require('../Mahindra.png')} style={styles.animeBtn} />
       </TouchableOpacity>
       <CustomBottomSheet
+        topInset={inset.top}
+        bottomInset={inset.bottom}
         enablePanDownToClose
         handleStyle={styles.sheetStyle}
         ref={sheetRef}
@@ -161,8 +224,12 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
           <View style={styles.chatContainer}>
             {chatData.qna.length ? (
               <FlatList
+                ref={flatListRef}
+                onContentSizeChange={() =>
+                  flatListRef.current.scrollToEnd({Animated: true})
+                }
                 data={data}
-                keyExtractor={(item, index) => item.content + index.toString()}
+                keyExtractor={(_, index) => index.toString()}
                 renderItem={renderItem}
                 ListFooterComponent={
                   chatData.isLoading ? (
@@ -176,6 +243,7 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
                   )
                 }
                 style={styles.listStyle}
+                contentContainerStyle={{paddingBottom: 100}}
               />
             ) : (
               <EmptyScreen />

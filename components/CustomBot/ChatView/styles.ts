@@ -3,9 +3,10 @@ import {StyleSheet} from 'react-native';
 const styles = StyleSheet.create({
   user: {
     position: 'absolute',
-    top: -15,
-    color: 'red',
-    fontSize: 10,
+    top: -20,
+    color: 'black',
+    fontSize: 14,
+    fontWeight: '500',
   },
   container: {
     width: '100%',
@@ -13,12 +14,10 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   response: {
-    borderColor: 'sky',
-    borderWidth: 0.5,
     maxWidth: '75%',
     borderRadius: 10,
     borderTopLeftRadius: 0,
-    backgroundColor: '#343538',
+    backgroundColor: 'white',
   },
   question: {
     flexDirection: 'row',
@@ -27,17 +26,35 @@ const styles = StyleSheet.create({
     marginLeft: '25%',
     borderRadius: 10,
     borderTopRightRadius: 0,
-    borderColor: 'red',
+    borderColor: '#dadada',
     borderWidth: 0.5,
-    backgroundColor: '#343538',
+    backgroundColor: 'white',
   },
   text: {
     padding: 5,
-    color: 'white',
+    color: 'black',
+    fontWeight: '500',
+    fontStyle: 'italic',
   },
   loadingWrapper: {
     width: 120,
     padding: 20,
+  },
+  chatButtonStyle: {
+    borderRadius: 5,
+    borderColor: 'white',
+    borderWidth: 0.5,
+    padding: 5,
+    margin: 5,
+    backgroundColor: 'red',
+  },
+  btnText: {color: '#fff', fontWeight: '500'},
+  imageSt: {
+    padding: 5,
+    margin: 5,
+    height: 150,
+    width: 'auto',
+    borderRadius: 5,
   },
 });
 
