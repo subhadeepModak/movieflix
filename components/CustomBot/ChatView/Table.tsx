@@ -10,23 +10,29 @@ const Table = ({data = []}) => {
   const headers = Object.keys(data[0]);
 
   return (
-    <ScrollView style={styles.container}>
-      {/* header */}
-      <View style={styles.header}>
-        {headers.map((h, i) => (
-          <Text key={i} style={styles.headerText}>
-            {h.toUpperCase()}
-          </Text>
-        ))}
-      </View>
-      {/* Body */}
-      {data.map((dt, i) => (
-        <View style={styles.item} key={i.toString()}>
-          {Object.values(dt).map(d => {
-            return <Text style={styles.text}>{d}</Text>;
-          })}
+    <ScrollView style={{maxHeight: 250}}>
+      <ScrollView horizontal>
+        <View style={styles.container}>
+          {/* header */}
+          <View style={[styles.header, {width: headers.length * 120}]}>
+            {headers.map((h, i) => (
+              <Text key={i} style={styles.headerText}>
+                {h.toUpperCase()}
+              </Text>
+            ))}
+          </View>
+          {/* Body */}
+          {data.map((dt, i) => (
+            <View
+              style={[styles.item, {width: headers.length * 120}]}
+              key={i.toString()}>
+              {Object.values(dt).map(d => {
+                return <Text style={styles.text}>{d}</Text>;
+              })}
+            </View>
+          ))}
         </View>
-      ))}
+      </ScrollView>
     </ScrollView>
   );
 };
@@ -41,33 +47,41 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 5,
     margin: 5,
-    maxHeight: 200,
-    minHeight: 200,
+    height: 'auto',
     paddingBottom: 30,
-    overflow: 'scroll',
   },
   header: {
     flex: 1,
     flexDirection: 'row',
-    gap: 20,
+    gap: 10,
     borderColor: 'black',
     borderWidth: 1,
     backgroundColor: 'red',
-    justifyContent: 'space-around',
   },
   headerText: {
     padding: 5,
     color: 'white',
+    flex: 1,
+    flexWrap: 'wrap',
+    minWidth: 100,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   item: {
     flex: 1,
     flexDirection: 'row',
-    gap: 20,
+    gap: 10,
     borderColor: 'black',
     borderWidth: 1,
-    justifyContent: 'space-around',
   },
   text: {
     padding: 5,
+    minWidth: 100,
+    flex: 1,
+    flexWrap: 'wrap',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
