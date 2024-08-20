@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     paddingVertical: 5,
+    color: '#000',
   },
   btnText: {fontSize: 16, color: 'white', fontWeight: 'bold'},
   chatContainer: {

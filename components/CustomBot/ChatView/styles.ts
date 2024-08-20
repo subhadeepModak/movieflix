@@ -8,6 +8,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
   },
+  buddy: {
+    color: 'red',
+    fontWeight: '600',
+  },
   container: {
     width: '100%',
     padding: 8,

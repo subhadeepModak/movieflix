@@ -14,7 +14,7 @@ const Table = ({data = []}) => {
       {/* header */}
       <View style={styles.header}>
         {headers.map((h, i) => (
-          <Text key={i} style={styles.text}>
+          <Text key={i} style={styles.headerText}>
             {h.toUpperCase()}
           </Text>
         ))}
@@ -52,7 +52,12 @@ const styles = StyleSheet.create({
     gap: 20,
     borderColor: 'black',
     borderWidth: 1,
-    backgroundColor: '#dedede',
+    backgroundColor: 'red',
+    justifyContent: 'space-around',
+  },
+  headerText: {
+    padding: 5,
+    color: 'white',
   },
   item: {
     flex: 1,
@@ -60,6 +65,7 @@ const styles = StyleSheet.create({
     gap: 20,
     borderColor: 'black',
     borderWidth: 1,
+    justifyContent: 'space-around',
   },
   text: {
     padding: 5,

@@ -19,9 +19,9 @@ import EmptyScreen from '../BotScreen/EmptyScreen';
 import CustomBottomSheet from '../BottomSheet';
 import {FlatList} from 'react-native-gesture-handler';
 import styles from './styles';
-import {HEADERS, SUGGESTIONS} from '../constant';
 import {BottomSheetDefaultFooterProps} from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetFooter/types';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {fetchResponse, onPressSuggestions} from '../helper';
 
 type BottomSheetComponentProps = {
   apiUrl: string;
@@ -46,92 +46,40 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
 
   const data = useMemo(() => chatData.qna, [chatData.qna]);
 
-  const fetchResponse = async () => {
-    chatDispatch({
-      type: 'RESPONSE_LOADING',
-      payload: true,
-    });
-
-    const inputVal = inputTextRef.current;
-    inputTextRef.current = '';
-    inputRef?.current?.clear();
-    await fetch(apiUrl, {
-      method: 'POST',
-      body: JSON.stringify({
-        ...extraParams,
-        // history: JSON.stringify(
-        //   // chatData.qna.slice(Math.max(chatData.qna.length - 3, 4)),
-        //   [],
-        // ),
-        history: JSON.stringify([]),
-        query: inputVal,
-      }),
-      headers: HEADERS,
-    })
-      .then(async response => {
-        const contentType = response.headers.get('content-type');
-        if (contentType === 'image/png') {
-          const blob = await response.blob();
-          const imageObjectURL = URL.createObjectURL(blob);
-          return {response: {src: imageObjectURL}};
-        }
-        return response.json();
-      })
-      .then((data: {response: any}) => {
-        if (data?.response) {
-          chatDispatch({
-            type: 'UPDATE_CONVERSATION',
-            payload: {role: 'assistant', content: data.response},
-          });
-        }
-        if (Array.isArray(data)) {
-          chatDispatch({
-            type: 'UPDATE_CONVERSATION',
-            payload: {role: 'assistant', content: data},
-          });
-        }
-      })
-      .catch(() => {
-        chatDispatch({
-          type: 'RESPONSE_LOADING',
-          payload: false,
-        });
-      })
-      .finally(() => {
-        chatDispatch({
-          type: 'RESPONSE_LOADING',
-          payload: false,
-        });
-      });
-  };
-
-  const onPressAsk = async () => {
+  const onSubmit = async () => {
     if (inputTextRef.current !== '') {
       chatDispatch({
         type: 'UPDATE_CONVERSATION',
         payload: {role: 'user', content: inputTextRef.current},
       });
 
-      await fetchResponse();
+      await fetchResponse(
+        chatDispatch,
+        inputTextRef,
+        inputRef,
+        extraParams,
+        apiUrl,
+      );
     }
   };
 
-  const onPress = useCallback(() => {
+  const onPressFab = useCallback(() => {
     sheetRef.current?.present(0);
   }, []);
+
+  const sheetSnapIndexChangeHandler = (currIndex: number) => {
+    if (currIndex === -1) {
+      sheetRef?.current?.close();
+      dismissAll();
+    }
+  };
 
   const renderFooter = useCallback(
     (props: React.JSX.IntrinsicAttributes & BottomSheetDefaultFooterProps) => (
       <BottomSheetFooter
         {...props}
         bottomInset={'0'}
-        style={[
-          {
-            height: 60,
-            backgroundColor: 'white',
-          },
-          styles.inputContainer,
-        ]}>
+        style={styles.inputContainer}>
         <Input
           ref={inputRef}
           placeholder="Ask me ..."
@@ -154,7 +102,7 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
         />
         <TouchableOpacity
           style={styles.submit}
-          onPress={onPressAsk}
+          onPress={onSubmit}
           disabled={chatData.isLoading || chatData.inputDisabled}>
           <Text style={styles.btnText}>{'>'}</Text>
         </TouchableOpacity>
@@ -163,51 +111,19 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
     [inputTextRef?.current, chatData.inputDisabled],
   );
 
-  const sheetSnapIndexChangeHandler = (currIndex: number) => {
-    if (currIndex === -1) {
-      sheetRef?.current?.close();
-      dismissAll();
-    }
-  };
-
-  const onPressHandler = async (item: string | number) => {
-    chatDispatch({
-      type: 'UPDATE_CONVERSATION',
-      payload: {role: 'user', content: item},
-    });
-    if (SUGGESTIONS[item]) {
-      await chatDispatch({
-        type: 'UPDATE_CONVERSATION',
-        payload: {role: 'Assistant', ...SUGGESTIONS[item]},
-      });
-    } else {
-      chatDispatch({
-        type: 'UPDATE_CONVERSATION',
-        payload: {
-          role: 'Assistant',
-          content: `Now you can ask questions regarding ${item}.`,
-        },
-      });
-      chatDispatch({
-        type: 'UPDATE_INPUT_ENABLED_STATUS',
-        payload: false,
-      });
-    }
-  };
-
   const renderItem = useCallback(({item}: any) => {
     return (
       <ChatView
         item={item}
         key={item.content}
-        onPressHandler={onPressHandler}
+        onPressHandler={item => onPressSuggestions(item, chatDispatch)}
       />
     );
   }, []);
 
   return (
     <>
-      <TouchableOpacity style={styles.button} onPress={onPress}>
+      <TouchableOpacity style={styles.button} onPress={onPressFab}>
         <Image source={require('../Mahindra.png')} style={styles.animeBtn} />
       </TouchableOpacity>
       <CustomBottomSheet
@@ -226,7 +142,7 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
               <FlatList
                 ref={flatListRef}
                 onContentSizeChange={() =>
-                  flatListRef.current.scrollToEnd({Animated: true})
+                  flatListRef.current.scrollToEnd({animate: true})
                 }
                 data={data}
                 keyExtractor={(_, index) => index.toString()}

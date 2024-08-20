@@ -1,15 +1,16 @@
-import {Image, Pressable, Text, View} from 'react-native';
+import {Image, Text, View} from 'react-native';
 import React from 'react';
 import LoadingDots from 'react-native-loading-dots';
 import styles from './styles';
 import Table from './Table';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export const ChatView = ({item, isLoading, onPressHandler}: any) => {
   const {role, content} = item;
 
   if (isLoading) {
     return (
-      <View style={[styles.container, {paddingBottom: 90}]}>
+      <View style={[styles.container, {paddingBottom: 90, height: 50}]}>
         <View style={styles.loadingWrapper}>
           <LoadingDots size={10} />
         </View>
@@ -26,7 +27,7 @@ export const ChatView = ({item, isLoading, onPressHandler}: any) => {
         </View>
       ) : (
         <View style={styles.response}>
-          <Text style={styles.user}>{'Assistant'}</Text>
+          <Text style={[styles.user, styles.buddy]}>{'Buddy'}</Text>
 
           {content?.src && (
             <Image source={{uri: content.src}} style={styles.imageSt} />
@@ -38,12 +39,13 @@ export const ChatView = ({item, isLoading, onPressHandler}: any) => {
           {Array.isArray(content) && <Table data={content} />}
           {(item.suggestions || []).map((suggestion: any, i: string) => {
             return (
-              <Pressable
+              <TouchableOpacity
+                delayPressOut={200}
                 style={styles.chatButtonStyle}
                 onPress={() => onPressHandler(suggestion)}
                 key={i.toString()}>
                 <Text style={styles.btnText}>{suggestion}</Text>
-              </Pressable>
+              </TouchableOpacity>
             );
           })}
         </View>
