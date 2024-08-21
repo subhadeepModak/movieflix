@@ -43,25 +43,30 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
   const {dismissAll} = useBottomSheetModal();
   const [chatData, chatDispatch] = useReducer(botReducer, initialState);
   const Input = Platform.OS === 'ios' ? BottomSheetTextInput : TextInput;
-
   const data = useMemo(() => chatData.qna, [chatData.qna]);
 
-  const onSubmit = async () => {
+  const onSubmit = useCallback(() => {
     if (inputTextRef.current !== '') {
       chatDispatch({
         type: 'UPDATE_CONVERSATION',
         payload: {role: 'user', content: inputTextRef.current},
       });
 
-      await fetchResponse(
+      chatDispatch({
+        type: 'UPDATE_HISTORY',
+        payload: {role: 'user', content: inputTextRef.current},
+      });
+      fetchResponse(
         chatDispatch,
         inputTextRef,
         inputRef,
         extraParams,
-        apiUrl,
+        chatData.apiUrl,
+        chatData.history,
       );
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiUrl, chatData.history, extraParams, chatData.apiUrl]);
 
   const onPressFab = useCallback(() => {
     sheetRef.current?.present(0);
@@ -108,7 +113,8 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
         </TouchableOpacity>
       </BottomSheetFooter>
     ),
-    [inputTextRef?.current, chatData.inputDisabled],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [chatData.inputDisabled, chatData.isLoading, onSubmit, chatData.apiUrl],
   );
 
   const renderItem = useCallback(({item}: any) => {

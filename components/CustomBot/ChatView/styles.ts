@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 const styles = StyleSheet.create({
   user: {
     position: 'absolute',
-    top: -20,
+    top: -22,
     color: 'black',
     fontSize: 14,
     fontWeight: '500',

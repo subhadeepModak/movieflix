@@ -4,7 +4,7 @@ export const InitialQuestions = [
   {
     role: 'Assistant',
     content:
-      'Welcome, Hi, I am your AI based virtual assistant from Mahindra Finance. I can help you with following things.',
+      'Welcome, Hi, I am your AI based virtual assistant. I can help you with following things.',
     suggestions: ['Pre-Disbursement', 'Finance', 'Post-Disbursement'],
   },
 ];
@@ -12,11 +12,15 @@ export const initialState = {
   qna: InitialQuestions,
   isLoading: false,
   inputDisabled: true,
+  history: [],
+  apiUrl: null,
 };
 interface State {
   qna: any;
   isLoading: boolean;
   inputDisabled: boolean;
+  history: any;
+  apiUrl: string;
 }
 
 // Define the action types
@@ -24,7 +28,9 @@ type Action =
   | {type: 'UPDATE_CONVERSATION'; payload: {role: String; content: String}}
   | {type: 'RESET_CONVERSATION'}
   | {type: 'RESPONSE_LOADING'; payload: boolean}
-  | {type: 'UPDATE_INPUT_ENABLED_STATUS'; payload: boolean};
+  | {type: 'UPDATE_INPUT_ENABLED_STATUS'; payload: boolean}
+  | {type: 'UPDATE_HISTORY'; payload: any}
+  | {type: 'UPDATE_TARGET_API'; payload: any};
 
 export const botReducer = (state: State, action: Action) => {
   switch (action.type) {
@@ -37,6 +43,7 @@ export const botReducer = (state: State, action: Action) => {
       return {
         ...state,
         qna: [],
+        history: [],
       };
     case 'RESPONSE_LOADING':
       return {
@@ -48,6 +55,17 @@ export const botReducer = (state: State, action: Action) => {
         ...state,
         inputDisabled: action.payload,
       };
+    case 'UPDATE_HISTORY':
+      return {
+        ...state,
+        history: [...state.history, action.payload],
+      };
+    case 'UPDATE_TARGET_API':
+      return {
+        ...state,
+        apiUrl: action.payload,
+      };
+
     default:
       return state;
   }
