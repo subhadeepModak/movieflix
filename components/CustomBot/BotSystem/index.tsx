@@ -22,17 +22,15 @@ import styles from './styles';
 import {BottomSheetDefaultFooterProps} from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetFooter/types';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {fetchResponse, onPressSuggestions} from '../helper';
+import {SUGGESTED_QUESTIONS_LIST} from '../constant';
 
 type BottomSheetComponentProps = {
-  apiUrl: string;
   extraParams: Object;
 };
 
 const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
-  apiUrl,
   extraParams,
 }: {
-  apiUrl: String;
   extraParams: Object;
 }) => {
   const inputRef = useRef(null);
@@ -51,7 +49,7 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
         type: 'UPDATE_CONVERSATION',
         payload: {role: 'user', content: inputTextRef.current},
       });
-
+      // Save to history
       chatDispatch({
         type: 'UPDATE_HISTORY',
         payload: {role: 'user', content: inputTextRef.current},
@@ -65,8 +63,7 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
         chatData.history,
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiUrl, chatData.history, extraParams, chatData.apiUrl]);
+  }, [extraParams, chatData.apiUrl, chatData.history]);
 
   const onPressFab = useCallback(() => {
     sheetRef.current?.present(0);
@@ -117,15 +114,30 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
     [chatData.inputDisabled, chatData.isLoading, onSubmit, chatData.apiUrl],
   );
 
-  const renderItem = useCallback(({item}: any) => {
-    return (
-      <ChatView
-        item={item}
-        key={item.content}
-        onPressHandler={item => onPressSuggestions(item, chatDispatch)}
-      />
-    );
-  }, []);
+  const onPressPromptSuggestion = useCallback(
+    async (item: any) => {
+      if (SUGGESTED_QUESTIONS_LIST.includes(item)) {
+        inputTextRef.current = item;
+        return await onSubmit();
+      }
+
+      return onPressSuggestions(item, chatDispatch);
+    },
+    [onSubmit],
+  );
+
+  const renderItem = useCallback(
+    ({item}: any) => {
+      return (
+        <ChatView
+          item={item}
+          key={item.content}
+          onPressHandler={onPressPromptSuggestion}
+        />
+      );
+    },
+    [onPressPromptSuggestion],
+  );
 
   return (
     <>

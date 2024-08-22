@@ -1,9 +1,16 @@
-import {HEADERS, SUGGESTIONS, TARGET_API_ENDPOINTS} from './constant';
+import {
+  HEADERS,
+  NESTED_SUGGESTIONS,
+  SUGGESTED_QUESTIONS_LIST,
+  SUGGESTIONS,
+  TARGET_API_ENDPOINTS,
+} from './constant';
 
-const getHistoryContent = data => {
+const getHistoryContent = (data, type) => {
   // image and table response ignored
-  if (data?.response && data.response.search('blob:') === -1) {
-    return data.response;
+
+  if (type === 'string') {
+    return data;
   }
 
   return '';
@@ -18,13 +25,15 @@ export const fetchResponse = async (
   history,
 ) => {
   if (!apiUrl) {
+    console.log('inFetch er', apiUrl);
     return null;
   }
+
   chatDispatch({
     type: 'RESPONSE_LOADING',
     payload: true,
   });
-  console.log('History', history);
+
   const inputVal = inputTextRef.current;
   inputTextRef.current = '';
   inputRef?.current?.clear();
@@ -40,40 +49,33 @@ export const fetchResponse = async (
     timeout: 120000,
   })
     .then(async response => {
-      const contentType = response.headers.get('content-type');
+      const contentType = await response.headers.get('content-type');
       if (contentType === 'image/png') {
         const blob = await response.blob();
         const imageObjectURL = URL.createObjectURL(blob);
-        return {response: {src: imageObjectURL}};
+        return {type: 'image', content: {src: imageObjectURL}};
       }
-      // console.log(response);
       return response.json();
     })
     .then(data => {
-      console.log(data);
-      if (data?.response) {
-        chatDispatch({
-          type: 'UPDATE_CONVERSATION',
-          payload: {role: 'assistant', content: data.response},
-        });
-      }
-      if (Array.isArray(data)) {
-        chatDispatch({
-          type: 'UPDATE_CONVERSATION',
-          payload: {role: 'assistant', content: data},
-        });
-      }
+      const {content, type} = data || {};
+      chatDispatch({
+        type: 'UPDATE_CONVERSATION',
+        payload: {
+          role: 'assistant',
+          content: content || 'Something is wrong. Please retry.',
+        },
+      });
 
       chatDispatch({
         type: 'UPDATE_HISTORY',
-        payload: {role: 'assistant', content: getHistoryContent(data)},
+        payload: {role: 'assistant', content: getHistoryContent(content, type)},
       });
     })
-    .catch((e) => {
-      console.log(e, 'error');
+    .catch(e => {
       chatDispatch({
-        type: 'RESPONSE_LOADING',
-        payload: false,
+        type: 'UPDATE_CONVERSATION',
+        payload: {role: 'assistant', content: `Error from server: ${e}`},
       });
     })
     .finally(() => {
@@ -85,6 +87,13 @@ export const fetchResponse = async (
 };
 
 export const onPressSuggestions = async (item, chatDispatch) => {
+  if (TARGET_API_ENDPOINTS?.[item]) {
+    chatDispatch({
+      type: 'UPDATE_TARGET_API',
+      payload: TARGET_API_ENDPOINTS[item],
+    });
+  }
+
   setTimeout(
     () =>
       chatDispatch({
@@ -93,6 +102,7 @@ export const onPressSuggestions = async (item, chatDispatch) => {
       }),
     100,
   );
+
   setTimeout(() => {
     if (SUGGESTIONS[item]) {
       chatDispatch({
@@ -104,17 +114,20 @@ export const onPressSuggestions = async (item, chatDispatch) => {
         payload: true,
       });
     } else {
-      chatDispatch({
-        type: 'UPDATE_TARGET_API',
-        payload: TARGET_API_ENDPOINTS[item],
-      });
-      chatDispatch({
-        type: 'UPDATE_CONVERSATION',
-        payload: {
-          role: 'Assistant',
-          content: `Now you can ask questions regarding ${item}.`,
-        },
-      });
+      if (NESTED_SUGGESTIONS?.[item]) {
+        chatDispatch({
+          type: 'UPDATE_CONVERSATION',
+          payload: {role: 'Assistant', ...NESTED_SUGGESTIONS[item]},
+        });
+      } else if (!SUGGESTED_QUESTIONS_LIST.includes(item)) {
+        chatDispatch({
+          type: 'UPDATE_CONVERSATION',
+          payload: {
+            role: 'Assistant',
+            content: `Now you can ask questions regarding ${item}.`,
+          },
+        });
+      }
       chatDispatch({
         type: 'UPDATE_INPUT_ENABLED_STATUS',
         payload: false,

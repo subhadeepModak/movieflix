@@ -1,10 +1,9 @@
 import React, {useEffect} from 'react';
-import {SafeAreaView} from 'react-native';
+import {SafeAreaView, View} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import MovieList from './components/screens/MovieList';
 import SplashScreen from 'react-native-splash-screen';
-import {API_URL, BotSystem} from './components/CustomBot';
+import {BotSystem} from './components/CustomBot';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -13,6 +12,12 @@ function App(): React.JSX.Element {
   const backgroundStyle = {
     backgroundColor: Colors.darker,
     position: 'relative',
+  };
+
+  const containerStyle = {
+    backgroundColor: '#dadada',
+    height: '100%',
+    width: '100%',
   };
 
   useEffect(() => {
@@ -24,10 +29,10 @@ function App(): React.JSX.Element {
       <BottomSheetModalProvider>
         <SafeAreaProvider>
           <SafeAreaView style={backgroundStyle}>
-            <MovieList />
+            <View style={containerStyle} />
             <BotSystem
-              apiUrl={API_URL}
-              extraParams={{session_id: 'NS', dealer_code: 14052}}
+              // apiUrl={API_URL}
+              extraParams={{session_id: 'NS', dealer_code: '14052'}}
             />
           </SafeAreaView>
         </SafeAreaProvider>

@@ -1,9 +1,10 @@
-import {Image, Text, View} from 'react-native';
+import {Text, View} from 'react-native';
 import React from 'react';
 import LoadingDots from 'react-native-loading-dots';
 import styles from './styles';
 import Table from './Table';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import PinchableImageView from '../PinchableImageView';
 
 export const ChatView = ({item, isLoading, onPressHandler}: any) => {
   const {role, content} = item;
@@ -30,7 +31,7 @@ export const ChatView = ({item, isLoading, onPressHandler}: any) => {
           <Text style={[styles.user, styles.buddy]}>{'Buddy'}</Text>
 
           {content?.src && (
-            <Image source={{uri: content.src}} style={styles.imageSt} />
+            <PinchableImageView imageUri={content.src} style={styles.imageSt} />
           )}
 
           {typeof content === 'string' && (
