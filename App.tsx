@@ -21,7 +21,7 @@ function App(): React.JSX.Element {
   };
 
   useEffect(() => {
-    SplashScreen.hide();
+    setTimeout(() => SplashScreen.hide(), 1500);
   }, []);
 
   return (
@@ -30,10 +30,7 @@ function App(): React.JSX.Element {
         <SafeAreaProvider>
           <SafeAreaView style={backgroundStyle}>
             <View style={containerStyle} />
-            <BotSystem
-              // apiUrl={API_URL}
-              extraParams={{session_id: 'NS', dealer_code: '14052'}}
-            />
+            <BotSystem extraParams={{session_id: 'NS', dealer_code: '14052'}} />
           </SafeAreaView>
         </SafeAreaProvider>
       </BottomSheetModalProvider>
