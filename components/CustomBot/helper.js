@@ -1,3 +1,6 @@
+import {Platform} from 'react-native';
+import {Buffer} from 'buffer';
+
 import {
   HEADERS,
   NESTED_SUGGESTIONS,
@@ -15,6 +18,23 @@ const getHistoryContent = (data, type) => {
 
   return '';
 };
+
+// Convert Blob to Base64 using FileReader equivalent
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    // Read blob as ArrayBuffer
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const arrayBuffer = reader.result;
+      // Convert ArrayBuffer to Base64
+      const base64 = Buffer.from(arrayBuffer).toString('base64');
+      // console.log(base64);
+      resolve(`data:image/png;base64,${base64}`); // Adjust MIME type if necessary
+    };
+    reader.onerror = reject;
+    reader.readAsArrayBuffer(blob);
+  });
+}
 
 export const fetchResponse = async (
   chatDispatch,
@@ -51,9 +71,20 @@ export const fetchResponse = async (
     .then(async response => {
       const contentType = await response.headers.get('content-type');
       if (contentType === 'image/png') {
-        const blob = await response.blob();
-        const imageObjectURL = URL.createObjectURL(blob);
-        return {type: 'image', content: {src: imageObjectURL}};
+        const blobData = await response.blob();
+        const base64Data = await blobToBase64(blobData);
+        console.log(base64Data);
+        if (Platform.OS === 'ios') {
+          // On iOS, you can use the native Blob constructor
+
+          const imageObjectURL = URL.createObjectURL(blobData);
+          return {type: 'image', content: {src: imageObjectURL}};
+        } else {
+          return {
+            type: 'image',
+            content: {src: base64Data},
+          };
+        }
       }
       return response.json();
     })
