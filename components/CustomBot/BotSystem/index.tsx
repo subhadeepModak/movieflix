@@ -1,4 +1,10 @@
-import React, {useCallback, useMemo, useReducer, useRef} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useMemo,
+  useReducer,
+  useRef,
+} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -23,16 +29,12 @@ import {BottomSheetDefaultFooterProps} from '@gorhom/bottom-sheet/lib/typescript
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {fetchResponse, onPressSuggestions} from '../helper';
 import {SUGGESTED_QUESTIONS_LIST} from '../constant';
+import {AuthContext} from '../../../AuthContext/AuthContextProvider';
 
-type BottomSheetComponentProps = {
-  extraParams: Object;
-};
+type BottomSheetComponentProps = {};
 
-const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
-  extraParams,
-}: {
-  extraParams: Object;
-}) => {
+const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = () => {
+  const [authState] = useContext(AuthContext);
   const inputRef = useRef(null);
   const flatListRef = useRef(null);
   const inputTextRef = useRef('');
@@ -58,12 +60,12 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
         chatDispatch,
         inputTextRef,
         inputRef,
-        extraParams,
+        {session_id: 'NS', dealer_code: authState.dealerCode},
         chatData.apiUrl,
         chatData.history,
       );
     }
-  }, [extraParams, chatData.apiUrl, chatData.history]);
+  }, [authState.dealerCode, chatData.apiUrl, chatData.history]);
 
   const onPressFab = useCallback(() => {
     sheetRef.current?.present(0);
@@ -138,6 +140,10 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = ({
     },
     [onPressPromptSuggestion],
   );
+
+  if (!authState?.isSignedIn) {
+    return null;
+  }
 
   return (
     <>

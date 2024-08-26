@@ -1,37 +1,35 @@
 import React, {useEffect} from 'react';
-import {SafeAreaView, View} from 'react-native';
-
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import SplashScreen from 'react-native-splash-screen';
 import {BotSystem} from './components/CustomBot';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Dashboard from './Screens/Dashboard';
+import SignIn from './Screens/SignIn';
+import AuthContextProvider from './AuthContext/AuthContextProvider';
+
+const Stack = createNativeStackNavigator();
 
 function App(): React.JSX.Element {
-  const backgroundStyle = {
-    backgroundColor: Colors.darker,
-    position: 'relative',
-  };
-
-  const containerStyle = {
-    backgroundColor: '#dadada',
-    height: '100%',
-    width: '100%',
-  };
-
   useEffect(() => {
     setTimeout(() => SplashScreen.hide(), 1500);
   }, []);
 
   return (
-    <GestureHandlerRootView style={{flex: 1}}>
+    <GestureHandlerRootView>
       <BottomSheetModalProvider>
         <SafeAreaProvider>
-          <SafeAreaView style={backgroundStyle}>
-            <View style={containerStyle} />
-            <BotSystem extraParams={{session_id: 'NS', dealer_code: '14052'}} />
-          </SafeAreaView>
+          <AuthContextProvider>
+            <NavigationContainer>
+              <Stack.Navigator screenOptions={{headerShown: false}}>
+                <Stack.Screen name="SignIn" component={SignIn} />
+                <Stack.Screen name="Dashboard" component={Dashboard} />
+              </Stack.Navigator>
+            </NavigationContainer>
+            <BotSystem />
+          </AuthContextProvider>
         </SafeAreaProvider>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>

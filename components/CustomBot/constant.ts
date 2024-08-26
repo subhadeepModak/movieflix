@@ -40,20 +40,60 @@ export const NESTED_SUGGESTIONS = {
 };
 
 export const SUGGESTED_QUESTIONS_LIST = Object.values(
-  NESTED_SUGGESTIONS
+  NESTED_SUGGESTIONS,
 ).reduce((acc, item) => {
   return [...acc, ...item.suggestions];
 }, []);
 
-// api end points
-export const DO_ENDPOINT =
-  'https://mmfsl-iht-cont-searchcx-test.thankfuldesert-989ed112.centralindia.azurecontainerapps.io/get_do_details';
+export const BASE_API_URL =
+  //'https://mmfsl-iht-container-dealerbuddy.thankfuldesert-989ed112.centralindia.azurecontainerapps.io';
+  'https://mmfsl-iht-cont-searchcx-test.thankfuldesert-989ed112.centralindia.azurecontainerapps.io';
 
-export const APPLICATION_ENDPOINT =
-  'https://mmfsl-iht-cont-searchcx-test.thankfuldesert-989ed112.centralindia.azurecontainerapps.io/get_application_details';
+// api end points
+
+export const DO_ENDPOINT = `${BASE_API_URL}/get_do_details`;
+
+export const APPLICATION_ENDPOINT = `${BASE_API_URL}/get_application_details`;
 
 export const TARGET_API_ENDPOINTS = {
   'Loan application live status': APPLICATION_ENDPOINT,
 
   'Delivery Order live status': DO_ENDPOINT,
+};
+
+export const DUMMY_USERS = [
+  {id: '17760', password: '1234'},
+  {id: '1310', password: '1234'},
+  {id: 'AU01', password: '1234'},
+  {id: 'BR05', password: '1234'},
+  {id: 'KA15', password: '1234'},
+  {id: '14052', password: '1234'},
+  {id: '37363', password: '1234'},
+];
+
+export const handleLogin = ({
+  username,
+  password,
+}: {
+  username: string;
+  password: string;
+}) => {
+  if (!username || !password) {
+    return new Promise<any>((resolve, reject) => {
+      reject('Username or password is incorrect.');
+    });
+  } else {
+    const selectedUser = DUMMY_USERS.find(({id}) => id === `${username}`);
+
+    if (!selectedUser || selectedUser.password !== password) {
+      return new Promise<any>((resolve, reject) => {
+        reject('Username or password is incorrect.');
+      });
+    }
+    return new Promise<any>((resolve, reject) => {
+      resolve({
+        isSignedIn: true,
+      });
+    });
+  }
 };
