@@ -1,4 +1,6 @@
 import {
+  KeyboardAvoidingView,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -53,63 +55,67 @@ const SignIn = ({navigation}: any) => {
 
   return (
     <View style={styles.container}>
-      <View style={{flexDirection: 'row'}}>
-        <Text style={{color: 'red', fontSize: 25, fontWeight: 'bold'}}>
-          Mahindra{' '}
-        </Text>
-        <Text style={{color: 'white', fontSize: 25, fontWeight: 'bold'}}>
-          Finance
-        </Text>
-      </View>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={{color: 'red', fontSize: 25, fontWeight: 'bold'}}>
+            Mahindra{' '}
+          </Text>
+          <Text style={{color: 'white', fontSize: 25, fontWeight: 'bold'}}>
+            Finance
+          </Text>
+        </View>
 
-      <View style={styles.formContainer}>
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 15,
-            fontWeight: '600',
-            fontFamily: 'Helvetica',
-          }}>
-          DEALER BUDDY
-        </Text>
-        <TextInput
-          style={styles.userInputStyle}
-          onChangeText={text =>
-            setFormData((prev: any) => ({...prev, username: text}))
-          }
-          placeholder="Username"
-          value={formData.username}
-        />
-        <TextInput
-          style={styles.passwordInputStyle}
-          onChangeText={text =>
-            setFormData((prev: any) => ({...prev, password: text}))
-          }
-          placeholder="Password"
-          value={formData.password}
-          secureTextEntry={true}
-        />
-        {hasError && <Text>{hasError}</Text>}
-        <TouchableOpacity
-          onPress={submitHandler}
-          style={[
-            styles.submitBtnStyle,
-            isLoginInProgress ? {opacity: 0.7} : {},
-          ]}
-          delayPressOut={300}
-          disabled={isLoginInProgress}>
+        <View style={styles.formContainer}>
           <Text
             style={{
               color: 'white',
               fontSize: 15,
-              fontWeight: 'bold',
-              alignSelf: 'center',
+              fontWeight: '600',
+              fontFamily: 'Helvetica',
             }}>
-            {isLoginInProgress ? '. . .' : 'Sign In'}
+            DEALER BUDDY
           </Text>
-        </TouchableOpacity>
-      </View>
-      <Text style={{color: 'white'}}>Version 1.0.1</Text>
+          <TextInput
+            style={styles.userInputStyle}
+            onChangeText={text =>
+              setFormData((prev: any) => ({...prev, username: text}))
+            }
+            placeholder="Username"
+            value={formData.username}
+          />
+          <TextInput
+            style={styles.passwordInputStyle}
+            onChangeText={text =>
+              setFormData((prev: any) => ({...prev, password: text}))
+            }
+            placeholder="Password"
+            value={formData.password}
+            secureTextEntry={true}
+          />
+          {hasError && <Text>{hasError}</Text>}
+          <TouchableOpacity
+            onPress={submitHandler}
+            style={[
+              styles.submitBtnStyle,
+              isLoginInProgress ? {opacity: 0.7} : {},
+            ]}
+            delayPressOut={300}
+            disabled={isLoginInProgress}>
+            <Text
+              style={{
+                color: 'white',
+                fontSize: 15,
+                fontWeight: 'bold',
+                alignSelf: 'center',
+              }}>
+              {isLoginInProgress ? '. . .' : 'Sign In'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+      {/* <Text style={{color: 'white'}}>Version 1.0.1</Text> */}
     </View>
   );
 };

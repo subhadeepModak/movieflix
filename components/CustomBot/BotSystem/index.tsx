@@ -12,6 +12,7 @@ import {
   Image,
   Platform,
   TextInput,
+  TouchableOpacityBase,
 } from 'react-native';
 import {
   BottomSheetFooter,
@@ -30,6 +31,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {fetchResponse, onPressSuggestions} from '../helper';
 import {SUGGESTED_QUESTIONS_LIST} from '../constant';
 import {AuthContext} from '../../../AuthContext/AuthContextProvider';
+import MenuIcon from '../assets/menu.svg';
 
 type BottomSheetComponentProps = {};
 
@@ -84,6 +86,10 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = () => {
         {...props}
         bottomInset={'0'}
         style={styles.inputContainer}>
+        <TouchableOpacity
+          onPress={() => onPressSuggestions('menu', chatDispatch)}>
+          <MenuIcon height={18} width={18} />
+        </TouchableOpacity>
         <Input
           ref={inputRef}
           placeholder="Ask me ..."

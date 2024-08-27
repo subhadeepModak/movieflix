@@ -2,7 +2,7 @@ import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   input: {
-    width: '85%',
+    width: '80%',
     borderColor: 'red',
     borderWidth: 1,
     borderRadius: 10,
@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
     padding: 10,
     height: 60,
     width: '100%',
+    gap: 10,
   },
   fab: {
     height: 4,

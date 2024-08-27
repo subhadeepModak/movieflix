@@ -5,6 +5,7 @@ import styles from './styles';
 import Table from './Table';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import PinchableImageView from '../PinchableImageView';
+import MenuIcon from '../assets/menu.svg';
 
 export const ChatView = ({item, isLoading, onPressHandler}: any) => {
   const {role, content} = item;
@@ -51,6 +52,25 @@ export const ChatView = ({item, isLoading, onPressHandler}: any) => {
           })}
         </View>
       )}
+      {role !== 'user' &&
+        (item?.enableEditing || !item?.suggestions?.length) && (
+          <TouchableOpacity
+            style={{
+              flexDirection: 'row',
+              padding: 5,
+              gap: 5,
+              borderColor: 'red',
+              borderRadius: 5,
+              borderWidth: 1,
+              width: 80,
+              margin: 5,
+              backgroundColor: 'white',
+            }}
+            onPress={() => onPressHandler('menu')}>
+            <MenuIcon height={16} width={16} />
+            <Text style={{fontWeight: '600'}}>Menu</Text>
+          </TouchableOpacity>
+        )}
     </View>
   );
 };

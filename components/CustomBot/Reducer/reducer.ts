@@ -30,7 +30,8 @@ type Action =
   | {type: 'RESPONSE_LOADING'; payload: boolean}
   | {type: 'UPDATE_INPUT_ENABLED_STATUS'; payload: boolean}
   | {type: 'UPDATE_HISTORY'; payload: any}
-  | {type: 'UPDATE_TARGET_API'; payload: any};
+  | {type: 'UPDATE_TARGET_API'; payload: any}
+  | {type: 'RESET_HISTORY'};
 
 export const botReducer = (state: State, action: Action) => {
   switch (action.type) {
@@ -59,6 +60,11 @@ export const botReducer = (state: State, action: Action) => {
       return {
         ...state,
         history: [...state.history, action.payload],
+      };
+    case 'RESET_HISTORY':
+      return {
+        ...state,
+        history: [],
       };
     case 'UPDATE_TARGET_API':
       return {

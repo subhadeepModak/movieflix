@@ -3,6 +3,7 @@ import {Buffer} from 'buffer';
 
 import {
   HEADERS,
+  MENU_OPTIONS,
   NESTED_SUGGESTIONS,
   SUGGESTED_QUESTIONS_LIST,
   SUGGESTIONS,
@@ -14,6 +15,10 @@ const getHistoryContent = (data, type) => {
 
   if (type === 'string') {
     return data;
+  }
+
+  if (type === 'table') {
+    return JSON.stringify(data);
   }
 
   return '';
@@ -45,7 +50,6 @@ export const fetchResponse = async (
   history,
 ) => {
   if (!apiUrl) {
-    console.log('inFetch er', apiUrl);
     return null;
   }
 
@@ -73,7 +77,7 @@ export const fetchResponse = async (
       if (contentType === 'image/png') {
         const blobData = await response.blob();
         const base64Data = await blobToBase64(blobData);
-        console.log(base64Data);
+        // console.log(base64Data);
         if (Platform.OS === 'ios') {
           // On iOS, you can use the native Blob constructor
 
@@ -144,6 +148,7 @@ export const onPressSuggestions = async (item, chatDispatch) => {
         type: 'UPDATE_INPUT_ENABLED_STATUS',
         payload: true,
       });
+      chatDispatch({type: 'RESET_HISTORY'});
     } else {
       if (NESTED_SUGGESTIONS?.[item]) {
         chatDispatch({

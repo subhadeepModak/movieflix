@@ -16,25 +16,29 @@ export const SUGGESTIONS = {
     content: 'Please choose one of these options...',
     suggestions: ['Commission Payout'],
   },
+  menu: {
+    content: 'I can help you with following things.',
+    suggestions: ['Pre-Disbursement', 'Finance', 'Post-Disbursement'],
+  },
 };
 
 export const NESTED_SUGGESTIONS = {
   'Loan application live status': {
     enableEditing: true,
-    content: 'Here is some suggested questions for you...',
+    content: 'Here are some suggested questions for you...',
     suggestions: [
-      'How many loan application were gererated in past month?',
-      'Which branch had the most number of applications this month?',
-      'Give me 5 customer applied for the loan applications last month ? ',
+      'How many loan applications were generated in the past month?',
+      'Which branch has the most number of applications this month?',
+      'Give me 5 customers who have applied for the loan applications last month ? ',
     ],
   },
   'Delivery Order live status': {
     enableEditing: true,
-    content: 'Here is some suggested questions for you...',
+    content: 'Here are some suggested questions for you...',
     suggestions: [
-      "How many DO's generated in the past month?",
-      " Give me 5 Customers whose DO's have generated in the past month?",
-      " Give me he application numbers for which the DO's amount is the greater than 25000000?",
+      "How many DO's have been generated in the past month?",
+      "Give me 5 Customers whose DO's have been generated in the past month?",
+      "Give me the application numbers for which the DO's amount is the greater than 25000000?",
     ],
   },
 };
@@ -55,10 +59,13 @@ export const DO_ENDPOINT = `${BASE_API_URL}/get_do_details`;
 
 export const APPLICATION_ENDPOINT = `${BASE_API_URL}/get_application_details`;
 
+export const GET_TA_DETAILS = `${BASE_API_URL}/get_ta_details`;
+
 export const TARGET_API_ENDPOINTS = {
   'Loan application live status': APPLICATION_ENDPOINT,
 
   'Delivery Order live status': DO_ENDPOINT,
+  TA: GET_TA_DETAILS,
 };
 
 export const DUMMY_USERS = [
@@ -69,7 +76,14 @@ export const DUMMY_USERS = [
   {id: 'KA15', password: '1234'},
   {id: '14052', password: '1234'},
   {id: '37363', password: '1234'},
+  {id: '26041', password: '1234'},
+  {id: 'PA38', password: '1234'},
 ];
+
+export const MENU_OPTIONS = {
+  content: 'I can help you with following things.',
+  suggestions: ['Pre-Disbursement', 'Finance', 'Post-Disbursement'],
+};
 
 export const handleLogin = ({
   username,

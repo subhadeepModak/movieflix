@@ -14,7 +14,7 @@ const Stack = createNativeStackNavigator();
 
 function App(): React.JSX.Element {
   useEffect(() => {
-    setTimeout(() => SplashScreen.hide(), 1500);
+    setTimeout(() => SplashScreen.hide(), 1000);
   }, []);
 
   return (
