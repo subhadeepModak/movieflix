@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import {ActivityIndicator, SafeAreaView, View} from 'react-native';
+import {ActivityIndicator, SafeAreaView, Text, View} from 'react-native';
 import React, {
   useEffect,
   useReducer,
@@ -112,7 +112,7 @@ const MovieList = () => {
   const handleStartReached = () => {
     if (!onStartReachedInProgress || !onEndReachedInProgress) {
       setOnStartReachedInProgress(true);
-      handleLoadMovies('up');
+      // handleLoadMovies('up');
       return Promise.resolve(true);
     } else {
       Promise.resolve(true);
@@ -131,13 +131,13 @@ const MovieList = () => {
 
   useEffect(() => {
     if (genreList.length === 0) {
-      loadGenres();
+      // loadGenres();
     }
   }, []);
 
   useEffect(() => {
     if (!filter.movieList.length) {
-      handleEndReached();
+      // handleEndReached();
     }
   }, [
     filter.movieList.length,
@@ -158,10 +158,10 @@ const MovieList = () => {
 
   return (
     <View style={styles.container}>
-      <AppHeader
+      {/* <AppHeader
         handleOnChange={handleOnChange}
         filterValue={filter.searchText}
-      />
+      /> */}
       <Genre
         genres={genreList}
         onSelect={onGenreSelect}

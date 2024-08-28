@@ -1,0 +1,9 @@
+1. Login screen
+2. splash screen
+3. Dash board with chat floating button
+4. chat view
+
+
+FLow: splash -> login -> dashboard -> chat bot
+
+Suggestions: pre populated questions ->
