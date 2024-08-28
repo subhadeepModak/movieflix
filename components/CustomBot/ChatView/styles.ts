@@ -8,9 +8,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
   },
-  buddy: {
-    color: 'red',
-    fontWeight: '600',
+  bot: {
+    position: 'absolute',
+    top: -25,
   },
   container: {
     width: '100%',
@@ -59,6 +59,17 @@ const styles = StyleSheet.create({
     height: 150,
     width: 'auto',
     borderRadius: 5,
+  },
+  menuStyles: {
+    flexDirection: 'row',
+    padding: 5,
+    gap: 5,
+    borderColor: 'red',
+    borderRadius: 5,
+    borderWidth: 0.5,
+    width: 80,
+    margin: 5,
+    backgroundColor: 'white',
   },
 });
 

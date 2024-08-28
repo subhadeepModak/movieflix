@@ -9,11 +9,12 @@ export const InitialQuestions = [
   },
 ];
 export const initialState = {
-  qna: InitialQuestions,
+  qna: [],
   isLoading: false,
   inputDisabled: true,
   history: [],
   apiUrl: null,
+  prePopulatedQuestions: {},
 };
 interface State {
   qna: any;
@@ -21,6 +22,7 @@ interface State {
   inputDisabled: boolean;
   history: any;
   apiUrl: string;
+  prePopulatedQuestions: object;
 }
 
 // Define the action types
@@ -31,7 +33,8 @@ type Action =
   | {type: 'UPDATE_INPUT_ENABLED_STATUS'; payload: boolean}
   | {type: 'UPDATE_HISTORY'; payload: any}
   | {type: 'UPDATE_TARGET_API'; payload: any}
-  | {type: 'RESET_HISTORY'};
+  | {type: 'RESET_HISTORY'}
+  | {type: 'UPDATE_PRE_POPULATED_QUESTIONS'; payload: any};
 
 export const botReducer = (state: State, action: Action) => {
   switch (action.type) {
@@ -70,6 +73,11 @@ export const botReducer = (state: State, action: Action) => {
       return {
         ...state,
         apiUrl: action.payload,
+      };
+    case 'UPDATE_PRE_POPULATED_QUESTIONS':
+      return {
+        ...state,
+        prePopulatedQuestions: action.payload,
       };
 
     default:

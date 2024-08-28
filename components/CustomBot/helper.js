@@ -1,14 +1,7 @@
 import {Platform} from 'react-native';
 import {Buffer} from 'buffer';
 
-import {
-  HEADERS,
-  MENU_OPTIONS,
-  NESTED_SUGGESTIONS,
-  SUGGESTED_QUESTIONS_LIST,
-  SUGGESTIONS,
-  TARGET_API_ENDPOINTS,
-} from './constant';
+import {BASE_API_URL, HEADERS} from './constant';
 
 const getHistoryContent = (data, type) => {
   // image and table response ignored
@@ -121,13 +114,15 @@ export const fetchResponse = async (
     });
 };
 
-export const onPressSuggestions = async (item, chatDispatch) => {
-  if (TARGET_API_ENDPOINTS?.[item]) {
+export const onPressSuggestions = async (item, chatDispatch, questions) => {
+  // update endpoints
+  if (questions[item]?.endPoint) {
     chatDispatch({
       type: 'UPDATE_TARGET_API',
-      payload: TARGET_API_ENDPOINTS[item],
+      payload: `${BASE_API_URL}${questions[item]?.endPoint}`,
     });
   }
+  // update user feed back
 
   setTimeout(
     () =>
@@ -138,36 +133,19 @@ export const onPressSuggestions = async (item, chatDispatch) => {
     100,
   );
 
+  // update assistant suggestion
+
   setTimeout(() => {
-    if (SUGGESTIONS[item]) {
+    if (questions[item]) {
       chatDispatch({
         type: 'UPDATE_CONVERSATION',
-        payload: {role: 'Assistant', ...SUGGESTIONS[item]},
-      });
-      chatDispatch({
-        type: 'UPDATE_INPUT_ENABLED_STATUS',
-        payload: true,
+        payload: {role: 'Assistant', ...questions[item]},
       });
       chatDispatch({type: 'RESET_HISTORY'});
-    } else {
-      if (NESTED_SUGGESTIONS?.[item]) {
-        chatDispatch({
-          type: 'UPDATE_CONVERSATION',
-          payload: {role: 'Assistant', ...NESTED_SUGGESTIONS[item]},
-        });
-      } else if (!SUGGESTED_QUESTIONS_LIST.includes(item)) {
-        chatDispatch({
-          type: 'UPDATE_CONVERSATION',
-          payload: {
-            role: 'Assistant',
-            content: `Now you can ask questions regarding ${item}.`,
-          },
-        });
-      }
-      chatDispatch({
-        type: 'UPDATE_INPUT_ENABLED_STATUS',
-        payload: false,
-      });
     }
+    chatDispatch({
+      type: 'UPDATE_INPUT_ENABLED_STATUS',
+      payload: !(questions[item]?.enableEditing || false),
+    });
   }, 500);
 };

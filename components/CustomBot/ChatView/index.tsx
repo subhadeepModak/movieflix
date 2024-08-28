@@ -6,6 +6,7 @@ import Table from './Table';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import PinchableImageView from '../PinchableImageView';
 import MenuIcon from '../assets/menu.svg';
+import BotSvg from '../assets/bot.svg';
 
 export const ChatView = ({item, isLoading, onPressHandler}: any) => {
   const {role, content} = item;
@@ -29,7 +30,9 @@ export const ChatView = ({item, isLoading, onPressHandler}: any) => {
         </View>
       ) : (
         <View style={styles.response}>
-          <Text style={[styles.user, styles.buddy]}>{'Buddy'}</Text>
+          <View style={styles.bot}>
+            <BotSvg fill={'#f50505'} height="25" width="25"/>
+          </View>
 
           {content?.src && (
             <PinchableImageView imageUri={content.src} style={styles.imageSt} />
@@ -55,17 +58,7 @@ export const ChatView = ({item, isLoading, onPressHandler}: any) => {
       {role !== 'user' &&
         (item?.enableEditing || !item?.suggestions?.length) && (
           <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              padding: 5,
-              gap: 5,
-              borderColor: 'red',
-              borderRadius: 5,
-              borderWidth: 1,
-              width: 80,
-              margin: 5,
-              backgroundColor: 'white',
-            }}
+            style={styles.menuStyles}
             onPress={() => onPressHandler('menu')}>
             <MenuIcon height={16} width={16} />
             <Text style={{fontWeight: '600'}}>Menu</Text>

@@ -14,7 +14,11 @@ const Table = ({data = []}) => {
       <ScrollView horizontal>
         <View style={styles.container}>
           {/* header */}
-          <View style={[styles.header, {width: headers.length * 120}]}>
+          <View
+            style={[
+              styles.header,
+              {width: headers.length > 1 ? headers.length * 120 : '100%'},
+            ]}>
             {headers.map((h, i) => (
               <Text key={i} style={styles.headerText}>
                 {h.toUpperCase()}
@@ -24,7 +28,10 @@ const Table = ({data = []}) => {
           {/* Body */}
           {data.map((dt, i) => (
             <View
-              style={[styles.item, {width: headers.length * 120}]}
+              style={[
+                styles.item,
+                {width: headers.length > 1 ? headers.length * 120 : 'auto'},
+              ]}
               key={i.toString()}>
               {Object.values(dt).map(d => {
                 return <Text style={styles.text}>{d}</Text>;

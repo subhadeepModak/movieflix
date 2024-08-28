@@ -1,6 +1,5 @@
 import {Pressable, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import React, {useContext} from 'react';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {AuthContext} from '../AuthContext/AuthContextProvider';
 
 const Dashboard = ({navigation}: any) => {
@@ -21,7 +20,7 @@ const Dashboard = ({navigation}: any) => {
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
         <Pressable onPress={handleLogout} style={styles.btnStyle}>
-          <Text style={styles.text}>Log out</Text>
+          <Text style={styles.text}>Logout</Text>
         </Pressable>
       </View>
     </SafeAreaView>

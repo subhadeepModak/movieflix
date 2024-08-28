@@ -1,9 +1,11 @@
 import React, {
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useReducer,
   useRef,
+  useState,
 } from 'react';
 import {
   View,
@@ -12,7 +14,6 @@ import {
   Image,
   Platform,
   TextInput,
-  TouchableOpacityBase,
 } from 'react-native';
 import {
   BottomSheetFooter,
@@ -22,16 +23,16 @@ import {
 } from '@gorhom/bottom-sheet';
 import {botReducer, initialState} from '../Reducer/reducer';
 import ChatView from '../ChatView';
-import EmptyScreen from '../BotScreen/EmptyScreen';
 import CustomBottomSheet from '../BottomSheet';
 import {FlatList} from 'react-native-gesture-handler';
 import styles from './styles';
 import {BottomSheetDefaultFooterProps} from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetFooter/types';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {fetchResponse, onPressSuggestions} from '../helper';
-import {SUGGESTED_QUESTIONS_LIST} from '../constant';
+import {API_CONSTANTS_URL} from '../constant';
 import {AuthContext} from '../../../AuthContext/AuthContextProvider';
 import MenuIcon from '../assets/menu.svg';
+import LoadingDots from 'react-native-loading-dots';
 
 type BottomSheetComponentProps = {};
 
@@ -46,6 +47,43 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = () => {
   const [chatData, chatDispatch] = useReducer(botReducer, initialState);
   const Input = Platform.OS === 'ios' ? BottomSheetTextInput : TextInput;
   const data = useMemo(() => chatData.qna, [chatData.qna]);
+  const {prePopulatedQuestions} = chatData;
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  console.log(chatData.apiUrl);
+  useEffect(() => {
+    if (!Object.keys(prePopulatedQuestions).length) {
+      // api call for pre populated data
+      fetch(API_CONSTANTS_URL, {
+        method: 'GET',
+      })
+        .then(response => response.json())
+        .then(res => {
+          // console.log(res);
+          chatDispatch({
+            type: 'UPDATE_PRE_POPULATED_QUESTIONS',
+            payload: res,
+          });
+        })
+        .finally(() => {
+          setIsLoading(true);
+        });
+    }
+
+    if (Object.keys(prePopulatedQuestions).length) {
+      setTimeout(() => {
+        chatDispatch({
+          type: 'UPDATE_CONVERSATION',
+          payload: {
+            role: 'Assistant',
+            ...prePopulatedQuestions.initialMsg,
+          },
+        });
+        setIsLoading(false);
+      }, 200);
+    }
+  }, [prePopulatedQuestions]);
 
   const onSubmit = useCallback(() => {
     if (inputTextRef.current !== '') {
@@ -87,7 +125,9 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = () => {
         bottomInset={'0'}
         style={styles.inputContainer}>
         <TouchableOpacity
-          onPress={() => onPressSuggestions('menu', chatDispatch)}>
+          onPress={() =>
+            onPressSuggestions('menu', chatDispatch, prePopulatedQuestions)
+          }>
           <MenuIcon height={18} width={18} />
         </TouchableOpacity>
         <Input
@@ -119,19 +159,25 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = () => {
       </BottomSheetFooter>
     ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [chatData.inputDisabled, chatData.isLoading, onSubmit, chatData.apiUrl],
+    [
+      chatData.inputDisabled,
+      chatData.isLoading,
+      onSubmit,
+      chatData.apiUrl,
+      prePopulatedQuestions,
+    ],
   );
 
   const onPressPromptSuggestion = useCallback(
     async (item: any) => {
-      if (SUGGESTED_QUESTIONS_LIST.includes(item)) {
+      if (!prePopulatedQuestions[item]) {
         inputTextRef.current = item;
         return await onSubmit();
       }
 
-      return onPressSuggestions(item, chatDispatch);
+      return onPressSuggestions(item, chatDispatch, prePopulatedQuestions);
     },
-    [onSubmit],
+    [onSubmit, prePopulatedQuestions],
   );
 
   const renderItem = useCallback(
@@ -168,7 +214,7 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = () => {
         footerComponent={renderFooter}>
         <BottomSheetView style={styles.container}>
           <View style={styles.chatContainer}>
-            {chatData.qna.length ? (
+            {chatData.qna.length || isLoading ? (
               <FlatList
                 ref={flatListRef}
                 onContentSizeChange={() =>
@@ -192,7 +238,7 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = () => {
                 contentContainerStyle={{paddingBottom: 100}}
               />
             ) : (
-              <EmptyScreen />
+              <LoadingDots size={10} />
             )}
           </View>
         </BottomSheetView>
