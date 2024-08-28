@@ -27,18 +27,27 @@ export const NESTED_SUGGESTIONS = {
     enableEditing: true,
     content: 'Here are some suggested questions for you...',
     suggestions: [
-      'How many loan applications were generated in the past month?',
-      'Which branch has the most number of applications this month?',
-      'Give me 5 customers who have applied for the loan applications last month ? ',
+      'How many loan applications were generated in the past month',
+      'Which branch has the most number of applications this month',
+      'Give me 5 customers who have applied for the loan applications last month',
     ],
   },
   'Delivery Order live status': {
     enableEditing: true,
     content: 'Here are some suggested questions for you...',
     suggestions: [
-      "How many DO's have been generated in the past month?",
-      "Give me 5 Customers whose DO's have been generated in the past month?",
-      "Give me the application numbers for which the DO's amount is the greater than 25000000?",
+      "How many DO's have been generated in the past month",
+      "Give me 5 Customers whose DO's have been generated in the past month",
+      "Give me the application numbers for which the DO's amount is greater than 2500000",
+    ],
+  },
+  TA: {
+    enableEditing: true,
+    content: 'Here are some suggested questions for you...',
+    suggestions: [
+      'I want to know my total limit',
+      'Tell me my available amount',
+      'Give me list of all outstanding balances',
     ],
   },
 };

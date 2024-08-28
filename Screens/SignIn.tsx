@@ -68,15 +68,7 @@ const SignIn = ({navigation}: any) => {
         </View>
 
         <View style={styles.formContainer}>
-          <Text
-            style={{
-              color: 'white',
-              fontSize: 15,
-              fontWeight: '600',
-              fontFamily: 'Helvetica',
-            }}>
-            DEALER BUDDY
-          </Text>
+          <Text style={styles.formHeader}>DEALER BUDDY</Text>
           <TextInput
             style={styles.userInputStyle}
             onChangeText={text =>
@@ -131,6 +123,12 @@ const styles = StyleSheet.create({
     position: 'relative',
     backgroundColor: 'black',
     gap: 50,
+  },
+  formHeader: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: '600',
+    fontFamily: 'Helvetica',
   },
   formContainer: {
     gap: 20,
