@@ -115,11 +115,11 @@ export const fetchResponse = async (
 };
 
 export const onPressSuggestions = async (item, chatDispatch, questions) => {
-  // update endpoints
-  if (questions[item]?.endPoint) {
+  if (questions[item]?.endPoint || questions[item]?.endpoint) {
+    const endPoint = questions[item]?.endPoint || questions[item]?.endpoint;
     chatDispatch({
       type: 'UPDATE_TARGET_API',
-      payload: `${BASE_API_URL}${questions[item]?.endPoint}`,
+      payload: `${BASE_API_URL}${endPoint}`,
     });
   }
   // update user feed back

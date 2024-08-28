@@ -49,9 +49,8 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = () => {
   const data = useMemo(() => chatData.qna, [chatData.qna]);
   const {prePopulatedQuestions} = chatData;
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  console.log(chatData.apiUrl);
   useEffect(() => {
     if (!Object.keys(prePopulatedQuestions).length) {
       // api call for pre populated data
@@ -65,9 +64,6 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = () => {
             type: 'UPDATE_PRE_POPULATED_QUESTIONS',
             payload: res,
           });
-        })
-        .finally(() => {
-          setIsLoading(true);
         });
     }
 
@@ -214,7 +210,7 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = () => {
         footerComponent={renderFooter}>
         <BottomSheetView style={styles.container}>
           <View style={styles.chatContainer}>
-            {chatData.qna.length || isLoading ? (
+            {chatData.qna.length && !isLoading ? (
               <FlatList
                 ref={flatListRef}
                 onContentSizeChange={() =>
@@ -238,7 +234,9 @@ const BotSystem: React.FunctionComponent<BottomSheetComponentProps> = () => {
                 contentContainerStyle={{paddingBottom: 100}}
               />
             ) : (
-              <LoadingDots size={10} />
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <LoadingDots size={10} />
+              </View>
             )}
           </View>
         </BottomSheetView>
